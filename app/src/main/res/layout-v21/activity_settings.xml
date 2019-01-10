@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SettingsActivity">
+
+    <TextView
+        android:id="@+id/shipping_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:text="@string/shipping"
+        android:textColor="#757575"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:text="@string/update"
+        android:textColor="#757575"
+        android:textSize="15sp" />
+
+
+    <TextView
+        android:id="@+id/about"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:text="@string/about"
+        android:textColor="#757575"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/invite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:text="@string/invite"
+        android:textColor="#757575"
+        android:textSize="15sp" />
+
+</LinearLayout>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/good"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".SignupActivity">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="8dp"
+        app:cardElevation="20dp">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="0dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:id="@+id/img"
+                    android:layout_width="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center|top"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/logo"
+                        android:layout_width="200dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_height="150dp"
+                        android:padding="10dp"
+                        android:src="@drawable/easyshop" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/img"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:hint="@string/phone_number"
+                        android:inputType="phone"
+                        android:textColorHint="@color/colorAccent"
+                        android:textSize="18sp"
+                        app:met_baseColor="@color/colorAccent"
+                        app:met_floatingLabel="highlight"
+                        app:met_floatingLabelTextSize="10dp"
+                        app:met_iconLeft="@drawable/ic_phone"
+                        app:met_iconPadding="0dp"
+                        app:met_maxCharacters="10"
+                        app:met_primaryColor="@color/colorAccent"
+                        app:met_singleLineEllipsis="true"
+                        app:met_textColorHint="@color/grey_500" />
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:hint="@string/name"
+                        android:inputType="textCapWords"
+                        android:textColorHint="@color/colorAccent"
+                        android:textSize="18sp"
+                        app:met_baseColor="@color/colorAccent"
+                        app:met_floatingLabel="highlight"
+                        app:met_floatingLabelTextSize="10dp"
+                        app:met_iconLeft="@drawable/ic_person"
+                        app:met_iconPadding="0dp"
+                        app:met_maxCharacters="25"
+                        app:met_primaryColor="@color/colorAccent"
+                        app:met_singleLineEllipsis="true"
+                        app:met_textColorHint="@color/grey_500" />
+
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:hint="@string/password"
+                        android:inputType="textPassword"
+                        android:textColorHint="@color/colorAccent"
+                        android:textSize="18sp"
+                        app:met_baseColor="@color/colorAccent"
+                        app:met_floatingLabel="highlight"
+                        app:met_floatingLabelTextSize="10dp"
+                        app:met_iconLeft="@drawable/ic_lock"
+                        app:met_iconPadding="0dp"
+                        app:met_maxCharacters="8"
+                        app:met_primaryColor="@color/colorAccent"
+                        app:met_singleLineEllipsis="true"
+                        app:met_textColorHint="@color/grey_500" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/signup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/layout1"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/colorPrimary"
+                    android:text="@string/create"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/already_have_account_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/signup"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
+                    android:text="@string/already_have_account"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/Login_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/signup"
+                    android:layout_alignBaseline="@id/already_have_account_text"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toEndOf="@id/already_have_account_text"
+                    android:layout_toRightOf="@id/already_have_account_text"
+                    android:padding="5dp"
+                    android:text="@string/login"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp" />
+
+
+                <TextView
+                    android:id="@+id/terms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/already_have_account_text"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
+                    android:text="@string/agree_registration"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/terms_of_service"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/already_have_account_text"
+                    android:layout_alignBaseline="@+id/terms"
+                    android:layout_centerHorizontal="true"
+                    android:layout_toEndOf="@id/terms"
+                    android:layout_toRightOf="@id/terms"
+                    android:gravity="center"
+                    android:text="@string/terms"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
+        </ScrollView>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

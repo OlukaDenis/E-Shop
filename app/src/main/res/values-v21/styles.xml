@@ -1,0 +1,8 @@
+<resources>
+
+    <style name="NavigatedAppBar" parent="@android:style/TextAppearance.Material.Title">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:color">@android:color/white</item>
+    </style>
+</resources>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="5dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/add_distributor_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Distributor Name*"
+            android:inputType="textCapWords"
+            android:textColorHint="@android:color/darker_gray"
+            android:textSize="20sp"
+            app:met_floatingLabelTextSize="14dp"
+            app:met_iconLeft="@drawable/ic_person"
+            app:met_iconPadding="0dp"
+            app:met_baseColor="@color/colorPrimaryDark"
+            app:met_floatingLabel="highlight"
+            app:met_maxCharacters="50"
+            app:met_primaryColor="@color/colorPrimaryDark"
+            app:met_singleLineEllipsis="true" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/add_distributor_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Distributor Phone*"
+            android:inputType="phone"
+            android:textColorHint="@android:color/darker_gray"
+            android:textSize="20sp"
+            app:met_floatingLabelTextSize="14dp"
+            app:met_iconLeft="@drawable/ic_phone"
+            app:met_iconPadding="0dp"
+            app:met_baseColor="@color/colorPrimaryDark"
+            app:met_floatingLabel="highlight"
+            app:met_maxCharacters="50"
+            app:met_primaryColor="@color/colorPrimaryDark"
+            app:met_singleLineEllipsis="true" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/add_distributor_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Distributor Email*"
+            android:inputType="textEmailAddress"
+            android:textColorHint="@android:color/darker_gray"
+            android:textSize="20sp"
+            app:met_floatingLabelTextSize="14dp"
+            app:met_iconLeft="@drawable/ic_mail"
+            app:met_iconPadding="0dp"
+            app:met_baseColor="@color/colorPrimaryDark"
+            app:met_floatingLabel="highlight"
+            app:met_maxCharacters="50"
+            app:met_primaryColor="@color/colorPrimaryDark"
+            app:met_singleLineEllipsis="true" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/add_distributor_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Distributor Address*"
+            android:inputType="textCapWords"
+            android:textColorHint="@android:color/darker_gray"
+            android:textSize="20sp"
+            app:met_floatingLabelTextSize="14dp"
+            app:met_iconLeft="@drawable/ic_location"
+            app:met_iconPadding="0dp"
+            app:met_baseColor="@color/colorPrimaryDark"
+            app:met_floatingLabel="highlight"
+            app:met_maxCharacters="50"
+            app:met_primaryColor="@color/colorPrimaryDark"
+            app:met_singleLineEllipsis="true"
+            android:layout_marginBottom="16dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <mehdi.sakout.fancybuttons.FancyButton
+                android:layout_weight="1"
+                android:id="@+id/select_distributor_image"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="8dp"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:text="SELECT"
+                app:fb_borderColor="@android:color/darker_gray"
+                app:fb_borderWidth="1dp"
+                app:fb_defaultColor="@color/colorAccent"
+                app:fb_focusColor="@color/colorPrimary"
+                app:fb_fontIconSize="20dp"
+                app:fb_iconPaddingRight="20dp"
+                app:fb_iconPosition="left"
+                app:fb_textColor="#FFFFFF"
+                app:fb_textSize="20dp"
+                app:fb_radius="12dp" />
+
+            <mehdi.sakout.fancybuttons.FancyButton
+                android:layout_weight="1"
+                android:id="@+id/upload_distributor_image"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="8dp"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:text="UPLOAD"
+                app:fb_borderColor="@android:color/darker_gray"
+                app:fb_borderWidth="1dp"
+                app:fb_defaultColor="@color/colorPrimaryDark"
+                app:fb_focusColor="@color/colorPrimary"
+                app:fb_fontIconSize="20dp"
+                app:fb_iconPaddingRight="20dp"
+                app:fb_iconPosition="left"
+                app:fb_textColor="#FFFFFF"
+                app:fb_textSize="20dp"
+                app:fb_radius="12dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

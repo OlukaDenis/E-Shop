@@ -7,7 +7,7 @@ public class Requests {
     private String name;
     private String contact;
     private String address;
-    private String total;
+    private int total;
     private String status;
     private List<Cart> orders;//List of orders
 
@@ -15,7 +15,7 @@ public class Requests {
 
     }
 
-    public Requests(String name, String contact, String address, String total, List<Cart> orders) {
+    public Requests(String name, String contact, String address, int total, List<Cart> orders) {
         this.name = name;
         this.contact = contact;
         this.address = address;
@@ -48,11 +48,11 @@ public class Requests {
         this.address = address;
     }
 
-    public String getTotal() {
+    public int getTotal() {
         return total;
     }
 
-    public void setTotal(String total) {
+    public void setTotal(int total) {
         this.total = total;
     }
 

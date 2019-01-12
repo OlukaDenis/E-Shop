@@ -1,6 +1,10 @@
 package com.mcdenny.easyshopug;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,26 +13,38 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mcdenny.easyshopug.Model.Address;
 import com.mcdenny.easyshopug.Model.Cart;
+import com.mcdenny.easyshopug.Model.Requests;
+import com.mcdenny.easyshopug.Utils.Cons;
+import com.mcdenny.easyshopug.Utils.Util;
 import com.mcdenny.easyshopug.ViewHolder.AddressViewHolder;
 import com.mcdenny.easyshopug.ViewHolder.CartDetailViewHolder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import dmax.dialog.SpotsDialog;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class CheckoutActivity extends AppCompatActivity {
 
-    TextView totalPrice;
+    TextView mName, mPhone, mAddress, mCity, totalPrice;
     Button checkout;
+    HashMap<String, List<Cart>> cartItemMap;
 
-    RecyclerView recyclerView;
+    String userKey;
     RecyclerView.LayoutManager layoutManager;
 
     FirebaseDatabase database;
-    DatabaseReference orders, address;
+    DatabaseReference orders;
     DatabaseReference cart;
 
     List<Cart> cartOrder = new ArrayList<>();
@@ -36,47 +52,115 @@ public class CheckoutActivity extends AppCompatActivity {
     FirebaseRecyclerAdapter<Cart, CartDetailViewHolder> adapter;
     FirebaseRecyclerAdapter<Address, AddressViewHolder> addressAdapter;
 
+    private String mCustomerAddress;
+    private String mCustomerCity;
+    private String mCustomerName;
+    private String mCustomerPhone;
+    private int orderTotal;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //set the fonts
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/QuicksandLight.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
         setContentView(R.layout.activity_checkout);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
-        //totalPrice = (TextView) findViewById(R.id.total);
+        totalPrice = (TextView) findViewById(R.id.tvTotal);
+        mAddress = (TextView) findViewById(R.id.tvAddress);
+        mCity = (TextView) findViewById(R.id.tvCity);
+        mName = (TextView) findViewById(R.id.tvname);
+        mPhone = (TextView) findViewById(R.id.tvPhone);
+        checkout = (Button) findViewById(R.id.confirm);
 
-        checkout = findViewById(R.id.confirm);
+        cartItemMap = new HashMap<>();
+
         //initialise firebase
         database = FirebaseDatabase.getInstance();
-        //addressDb = FirebaseDatabase.getInstance();
-
-        // address reference
-        address = database.getReference("Addresses");
-        //requests reference
         orders = database.getReference("Requests");
-        //cart reference
         cart = database.getReference("Cart");
 
-       // recyclerView = (RecyclerView) findViewById(R.id.confirm_cartList);
-        //recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        //recyclerView.setLayoutManager(layoutManager);
+        final android.app.AlertDialog waitingDialog = new SpotsDialog(CheckoutActivity.this);
+        waitingDialog.dismiss();
 
-      //  loadCartOrders();
-      //  populateAddress();
+        if (getIntent().hasExtra(CartDetail.CUSTOMER_ADDRESS)) {
+            mCustomerAddress = getIntent().getStringExtra(CartDetail.CUSTOMER_ADDRESS);
+            mAddress.setText(mCustomerAddress);
+        }
+        if (getIntent().hasExtra(CartDetail.CUSTOMER_CITY)) {
+            mCustomerCity = getIntent().getStringExtra(CartDetail.CUSTOMER_CITY);
+            mCity.setText(mCustomerCity);
+        }
+        if (getIntent().hasExtra(CartDetail.CURRENT_USER_PHONE)) {
+            mCustomerPhone = getIntent().getStringExtra(CartDetail.CURRENT_USER_PHONE);
+            mPhone.setText(mCustomerPhone);
+        }
+        if (getIntent().hasExtra(CartDetail.CURRENT_USER_NAME)) {
+            mCustomerName = getIntent().getStringExtra(CartDetail.CURRENT_USER_NAME);
+            mName.setText(mCustomerName);
+        }
+        if (getIntent().hasExtra(CartDetail.TOTAL_AMOUNT)) {
+            orderTotal = getIntent().getIntExtra(CartDetail.TOTAL_AMOUNT, 0);
+            totalPrice.setText(Cons.Vals.CURRENCY + Util.formatNumber(String.valueOf(orderTotal)));
+        }
+        if (getIntent().hasExtra(CartDetail.ITEMS_LIST)) {
+            cartOrder = ( List<Cart>) getIntent().getSerializableExtra(CartDetail.ITEMS_LIST);
+        }
 
         checkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //authorize mobile money
+                final Requests requests = new Requests(
+                       mCustomerName,
+                        mCustomerPhone,
+                        mCustomerAddress,
+                        orderTotal,
+                        cartOrder
+                );
+                //Sending the above data to firebase database
+                orders.child(String.valueOf(System.currentTimeMillis()))
+                        .setValue(requests);
+                Intent intent = new Intent(CheckoutActivity.this, CartDetail.class);
+                startActivity(intent);
+                finish();
+                /*
+                cart.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            String userType = snapshot.child("phone").getValue().toString();
+                            if (userType.equals(mCustomerPhone)) {
+
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                    */
 
 
+                /* TODO Add mobile money integration
+                 */
+                //TODO Delete from Cart
             }
         });
-
     }
 
-
+    /*
     private void populateAddress() {
         addressAdapter = new FirebaseRecyclerAdapter<Address, AddressViewHolder>(
                 Address.class,
@@ -92,41 +176,8 @@ public class CheckoutActivity extends AppCompatActivity {
                     viewHolder.division.setText(addressModel.getAddressDivision());
                     viewHolder.district.setText(addressModel.getAddressDistrict());
                     viewHolder.phone.setText(addressModel.getAddressPhone());
-
             }
         };
-    }
-/*
-    //retrieving the orders from the cart
-    private void loadCartOrders() {
-        adapter = new FirebaseRecyclerAdapter<Cart, CartDetailViewHolder>(
-                Cart.class,
-                R.layout.cart_layout,
-                CartDetailViewHolder.class,
-                cart
-        ) {
-            @Override
-            protected void populateViewHolder(CartDetailViewHolder viewHolder, Cart model, int position) {
-                cartOrder = new ArrayList<Cart>();
-                viewHolder.cart_item_name.setText(model.getName());
-                viewHolder.cart_item_price.setText(model.getPrice());
-                TextDrawable textDrawable = TextDrawable.builder()
-                        .buildRound("" + model.getQuantity(), Color.RED);
-                viewHolder.cart_item_count.setImageDrawable(textDrawable);
+    }*/
 
-                //calculating the total price
-                int total = 0;
-                for (Cart mCart : cartOrder)
-                    total += (Integer.parseInt(mCart.getPrice())) * (Integer.parseInt(mCart.getQuantity()));
-                Locale locale = new Locale("en", "UG");
-                NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
-
-                totalPrice.setText(numberFormat.format(total));
-            }
-        };
-        adapter.notifyDataSetChanged();//Refresh data if it has been changed
-      //  recyclerView.setAdapter(adapter);
-
-    }
-*/
 }

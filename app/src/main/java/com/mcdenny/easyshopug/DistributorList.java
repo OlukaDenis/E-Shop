@@ -2,6 +2,7 @@ package com.mcdenny.easyshopug;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -38,6 +39,8 @@ import com.squareup.picasso.Picasso;
 import java.util.UUID;
 
 import mehdi.sakout.fancybuttons.FancyButton;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class DistributorList extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -57,8 +60,18 @@ public class DistributorList extends AppCompatActivity {
     private final int PICK_IMAGE_REQUEST = 71;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //set the fonts
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/QuicksandLight.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
         setContentView(R.layout.activity_distributor_list);
         setTitle("Distributor List");
 

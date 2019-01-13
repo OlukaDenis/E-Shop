@@ -1,5 +1,6 @@
 package com.mcdenny.easyshopug;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +26,8 @@ import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -183,25 +186,6 @@ public class CartDetail extends AppCompatActivity {
                 intent.putExtra(CartDetail.TOTAL_AMOUNT, total);
                 startActivity(intent);
                 finish();
-                /*
-                //Creating a new request
-                Requests requests = new Requests(
-                        Common.user_Current.getName(),
-                        Common.user_Current.getPhone(),
-                        editAddress.getText().toString(),
-                        totalPrice.getText().toString(),
-                        list
-                );
-
-                //Sending the above data to firebase database
-                orders.child(String.valueOf(System.currentTimeMillis()))
-                        .setValue(requests);
-
-                //Deletes the order cart
-                Toast.makeText(getBaseContext(), "Order successfuly submitted", Toast.LENGTH_LONG).show();
-                finish();*/
-
-                //cart.setValue(null);
             }
         });
 
@@ -211,21 +195,18 @@ public class CartDetail extends AppCompatActivity {
                 dialogInterface.dismiss();
             }
         });
-
         alertDialog.show();
     }
 
 
     private void loadCartDetails() {
-        //waitingDialog = new SpotsDialog(CartDetail.this);
-        //waitingDialog.show();
-        cart.addValueEventListener(new ValueEventListener() {
+        waitingDialog = new SpotsDialog(CartDetail.this);
+        waitingDialog.show();
+        cart.child(Common.user_Current.getPhone()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 total = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String userType = snapshot.child("phone").getValue().toString();
-                    if (userType.equals(currentUserPhone)) {
                         Cart mCartItem = snapshot.getValue(Cart.class);
                         Cart listCart = new Cart();
                         //cartItemMap.put(dataSnapshot.getKey(), mCartItem);
@@ -244,23 +225,37 @@ public class CartDetail extends AppCompatActivity {
                         checkoutLayout.setVisibility(View.VISIBLE);
                         noCart.setVisibility(View.GONE);
                         noCartImg.setVisibility(View.GONE);
-                        //waitingDialog.dismiss();
+                        String itemKey = snapshot.getKey();
                         RecyclerViewAdapter recycler = new RecyclerViewAdapter(list);
                         recyclerView.setAdapter(recycler);
                     }
-                    else{
-                        noCart.setVisibility(View.VISIBLE);
-                        noCartImg.setVisibility(View.VISIBLE);
-                        checkoutLayout.setVisibility(View.GONE);
-                       // waitingDialog.dismiss();
-                    }
-
-                }
+                waitingDialog.dismiss();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 //waitingDialog.dismiss();
+            }
+        });
+    }
+
+    //remove from cart
+    private void removeCart(String key) {
+
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Removing Product from Cart...");
+        progressDialog.show();
+        cart.child(Common.user_Current.getPhone()).child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(CartDetail.this, "Removed item from cart.", Toast.LENGTH_SHORT).show();
+                    loadCartDetails();
+                    progressDialog.dismiss();
+                } else {
+                    progressDialog.dismiss();
+                    Toast.makeText(CartDetail.this, "Failed to remove from cart.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

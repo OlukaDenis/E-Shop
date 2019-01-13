@@ -40,13 +40,12 @@ public class ProductDetail extends AppCompatActivity {
     TextView prdName, prdDescription, prdPrice, prdDiscount;
     ImageView prdImage;
     CollapsingToolbarLayout detailCollapsingToolbar;
-    FloatingActionButton cartBtn;
     ElegantNumberButton numberButton;
 
     String productID = "";
     Product finalProduct;
     String cNm, cImg, cDesc, cPrice, cDisc;
-    Button addToCart, buyNow;
+    Button addToCart;
     FirebaseDatabase database;
     DatabaseReference productDetail;
     DatabaseReference cartDetail;
@@ -98,16 +97,9 @@ public class ProductDetail extends AppCompatActivity {
         prdPrice = findViewById(R.id.product_detail_price);
         prdDiscount = findViewById(R.id.product_detail_discount);
         prdImage = findViewById(R.id.product_detail_image);
-        buyNow = findViewById(R.id.buy_it_now);
         addToCart = findViewById(R.id.add_to_cart);
-        cartBtn = findViewById(R.id.cart_button);
         numberButton = findViewById(R.id.add_subtract_button);
-        buyNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ProductDetail.this, CheckoutActivity.class));
-            }
-        });
+
         addToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,29 +118,7 @@ public class ProductDetail extends AppCompatActivity {
                 );
 
                 //sending the cart details to firebase
-                cartDetail.child(String.valueOf(System.currentTimeMillis())).setValue(cart);
-                Snackbar.make(view, "Successfully added to the Cart", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        //setting the click listener to the cart button, so that it adds the order to the cart
-        cartBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                prd_detail = new ArrayList<Product>();
-                 //New cart
-                Cart cart = new Cart(
-                        Common.user_Current.getPhone(),
-                        cNm,
-                        cImg,
-                        cDesc,
-                        mQty,
-                        cDisc,
-                        numberButton.getNumber()
-
-                );
-                //sending the cart details to firebase
-                cartDetail.child(String.valueOf(System.currentTimeMillis())).setValue(cart);
+                cartDetail.child(Common.user_Current.getPhone()).push().setValue(cart);
                 Snackbar.make(view, "Successfully added to the Cart", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }

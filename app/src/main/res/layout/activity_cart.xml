@@ -23,7 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:scaleType="fitCenter"
-            android:visibility="gone"
             android:layout_marginTop="100dp"
             android:src="@drawable/ic_warning"/>
         <TextView
@@ -33,7 +32,6 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:textSize="20sp"
-            android:visibility="gone"
             android:layout_marginTop="30dp"
             android:text="No items in your cart"/>
     </RelativeLayout>
@@ -43,6 +41,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:visibility="gone"
         android:layout_weight="1">
 
         <LinearLayout

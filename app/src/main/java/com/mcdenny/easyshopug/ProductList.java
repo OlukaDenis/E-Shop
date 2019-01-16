@@ -133,7 +133,7 @@ public class ProductList extends AppCompatActivity {
                 Product.class,
                 R.layout.product_list_layout,
                 ProductViewHolder.class,
-                productItemList.orderByChild("Name").equalTo(text.toString())//compare the names
+                productItemList.orderByChild("name").equalTo(text.toString())//compare the names
         ) {
             @Override
             protected void populateViewHolder(ProductViewHolder viewHolder, Product model, int position) {
@@ -164,7 +164,7 @@ public class ProductList extends AppCompatActivity {
     }
 
     private void loadSuggest() {
-        productItemList.orderByChild("MenuID").equalTo(categoryId)
+        productItemList.orderByChild("menuid").equalTo(categoryId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -187,7 +187,7 @@ public class ProductList extends AppCompatActivity {
                 Product.class,
                 R.layout.product_list_layout,
                 ProductViewHolder.class,
-                productItemList.orderByChild("MenuID").equalTo(categoryId)//getting product items where menuID equals to category id
+                productItemList.orderByChild("menuid").equalTo(categoryId)//getting product items where menuID equals to category id
         ) {
             @Override
             protected void populateViewHolder(ProductViewHolder viewHolder, Product model, int position) {

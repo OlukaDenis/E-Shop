@@ -11,18 +11,44 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+
+
+
+
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/address_name"
+            android:id="@+id/address_region"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="3dp"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:hint="@string/name"
+            android:hint="Region e.g. central"
+            android:inputType="textCapWords"
+            android:textColorHint="@android:color/white"
+            android:textSize="20sp"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelTextSize="8dp"
+            app:met_iconPadding="0dp"
+            app:met_primaryColor="#2196F3"
+            app:met_singleLineEllipsis="true"
+            app:met_textColorHint="#757575" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/address_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="3dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="City"
             android:inputType="textCapWords"
             android:textColorHint="@android:color/white"
             android:textSize="20sp"
@@ -44,7 +70,7 @@
             android:layout_marginTop="3dp"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:hint="@string/area"
+            android:hint="Address"
             android:inputType="textCapWords"
             android:textColorHint="@android:color/white"
             android:textSize="20sp"
@@ -55,94 +81,7 @@
             app:met_singleLineEllipsis="true"
             app:met_textColorHint="#757575" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/address_district"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="3dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:hint="@string/district"
-            android:inputType="textCapWords"
-            android:textColorHint="@android:color/white"
-            android:textSize="20sp"
-            app:met_floatingLabel="highlight"
-            app:met_floatingLabelTextSize="8dp"
-            app:met_iconPadding="0dp"
-            app:met_primaryColor="#2196F3"
-            app:met_singleLineEllipsis="true"
-            app:met_textColorHint="#757575" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/address_division"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="3dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:hint="@string/division"
-            android:inputType="textCapWords"
-            android:textColorHint="@android:color/white"
-            android:textSize="20sp"
-            app:met_floatingLabel="highlight"
-            app:met_floatingLabelTextSize="8dp"
-            app:met_iconPadding="0dp"
-            app:met_primaryColor="#2196F3"
-            app:met_singleLineEllipsis="true"
-            app:met_textColorHint="#757575" />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/address_county"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="3dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:hint="@string/county"
-            android:inputType="textCapWords"
-            android:textColorHint="@android:color/white"
-            android:textSize="20sp"
-            app:met_floatingLabel="highlight"
-            app:met_floatingLabelTextSize="8dp"
-            app:met_iconPadding="0dp"
-            app:met_primaryColor="#2196F3"
-            app:met_singleLineEllipsis="true"
-            app:met_textColorHint="#757575" />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/address_phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="3dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:hint="@string/phone_number"
-            android:inputType="phone"
-            android:textColorHint="@android:color/white"
-            android:textSize="20sp"
-            app:met_floatingLabel="highlight"
-            app:met_floatingLabelTextSize="8dp"
-            app:met_maxCharacters="12"
-            app:met_iconPadding="0dp"
-            app:met_primaryColor="#2196F3"
-            app:met_singleLineEllipsis="true"
-            app:met_textColorHint="#757575" />
 
         <Button
             android:id="@+id/done"
@@ -152,11 +91,11 @@
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="40dp"
             android:background="#42A5F5"
             android:text="@string/done"
             android:textColor="@android:color/white"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
 </ScrollView>

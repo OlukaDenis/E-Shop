@@ -1,5 +1,6 @@
 package com.mcdenny.easyshopug;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,9 @@ import com.mcdenny.easyshopug.Common.Common;
 import com.mcdenny.easyshopug.Model.Requests;
 import com.mcdenny.easyshopug.ViewHolder.OrderViewHolder;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class OrderStatus extends AppCompatActivity {
     public RecyclerView orderRecylerView;
     public RecyclerView.LayoutManager layoutManager;
@@ -25,8 +29,18 @@ public class OrderStatus extends AppCompatActivity {
     FirebaseRecyclerAdapter<Requests, OrderViewHolder> adapter;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //set the fonts
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/QuicksandLight.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
         setContentView(R.layout.activity_order_status);
         setTitle("Your Orders");
 

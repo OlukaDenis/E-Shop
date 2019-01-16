@@ -1,6 +1,7 @@
 package com.mcdenny.easyshopug;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,18 +19,36 @@ import com.mcdenny.easyshopug.Model.Address;
 
 import java.util.Timer;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static java.lang.Boolean.getBoolean;
+
 public class ShippingAddress extends AppCompatActivity {
     private static Timer mTimer = new Timer();
     private static ProgressDialog dialog;
     DatabaseReference mDatabaseReference;
     FirebaseDatabase addreess_table;
-    EditText nameEditText, areaEditText, districtEditText, countyEditText, phoneEditText, divisionEditText;
-    String name, area, district, county, phone, division;
+    EditText etAddress, etCity, etRegion;
+    String address, city, region;
     Button address_done;
+
+    
+    public static final String PICK_ADDRESS_DETAILS = "addressDetails";
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //set the fonts
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/QuicksandLight.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
         setContentView(R.layout.activity_shipping_address);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
@@ -37,89 +56,45 @@ public class ShippingAddress extends AppCompatActivity {
         // final ProgressDialog mDialog = new ProgressDialog(this);
         // dialog.setMessage("loading");
 
-        nameEditText = findViewById(R.id.address_name);
-        areaEditText = findViewById(R.id.address_area);
-        districtEditText = findViewById(R.id.address_district);
-        countyEditText = findViewById(R.id.address_county);
-        phoneEditText = findViewById(R.id.address_phone);
-        divisionEditText = findViewById(R.id.address_division);
+        etAddress = findViewById(R.id.address_area);
+        etCity = findViewById(R.id.address_city);
+        etRegion = findViewById(R.id.address_region);
         address_done = findViewById(R.id.done);
 
         //pointing to the root of database
         addreess_table = FirebaseDatabase.getInstance();
         mDatabaseReference = addreess_table.getReference("Addresses");
 
+        
         address_done.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                //mDialog.show();
-
-                name = nameEditText.getText().toString();
-                area = areaEditText.getText().toString();
-                district = districtEditText.getText().toString();
-                county = countyEditText.getText().toString();
-                phone = phoneEditText.getText().toString();
-                division = divisionEditText.getText().toString();
+                address = etAddress.getText().toString();
+                city = etCity.getText().toString();
+                region = etRegion.getText().toString();
 
                 //checking whether the edit text is empty
-                if (name.isEmpty()) {
-                    nameEditText.setError("field can't be empty");
-                    nameEditText.requestFocus();
-                } else if (area.isEmpty()) {
-                    areaEditText.setError("field can't be empty");
-                    areaEditText.requestFocus();
-                } else if (district.isEmpty()) {
-                    districtEditText.setError("field can't be empty");
-                    districtEditText.requestFocus();
-                } else if (county.isEmpty()) {
-                    countyEditText.setError("field can't be empty");
-                    countyEditText.requestFocus();
-                } else if (phone.isEmpty() || phone.length() < 10) {
-                    phoneEditText.setError("Invalid number");
-                    phoneEditText.requestFocus();
-                } else if (division.isEmpty()) {
-                    divisionEditText.setError("field can't be empty");
-                    divisionEditText.requestFocus();
+                if (address.isEmpty()) {
+                    etAddress.setError("field can't be empty");
+                    etAddress.requestFocus();
+                } else if (city.isEmpty()) {
+                    etCity.setError("field can't be empty");
+                    etCity.requestFocus();
+                } else if (region.isEmpty()) {
+                    etRegion.setError("field can't be empty");
+                    etRegion.requestFocus();
                 } else {
-
-                    dialog = ProgressDialogWithTimeout.show(ShippingAddress.this, null, "processing.....");
-                    dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    mDatabaseReference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            //check if the user exists
-                            Address address = new Address(name, area, district, county, phone, division);
-                            if (dataSnapshot.child(phone).exists()) {
-                                //dialog.dismiss();
-
-                                phoneEditText.setError("phone number already exists");
-                                phoneEditText.requestFocus();
-                            }
-                                if (phone.startsWith("0") && phone.length() == 10 || phone.startsWith("256") && phone.length() == 12 ) {
-
-                                    mDatabaseReference.child(phone).setValue(address);
-                                    //Toast.makeText(getApplicationContext(), "Succeeded", Toast.LENGTH_SHORT).show();
-                                    nameEditText.getText().clear();
-                                    areaEditText.getText().clear();
-                                    countyEditText.getText().clear();
-                                    districtEditText.getText().clear();
-                                    divisionEditText.getText().clear();
-                                    phoneEditText.getText().clear();
-
-                                    startActivity(new Intent(getApplicationContext(), CheckoutActivity.class));
-
-                                } else {
-                                    phoneEditText.setError("invalid phone number");
-                                    phoneEditText.requestFocus();
-                                }
-                            }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
+                    if(ShippingAddress.this.getIntent().hasExtra(PICK_ADDRESS_DETAILS) &&
+                            ShippingAddress.this.getIntent().getExtras().getBoolean(PICK_ADDRESS_DETAILS) ){
+                        Intent intent = new Intent();
+                        intent.putExtra("customerAddress", address);
+                        intent.putExtra("customerCity", city);
+                        intent.putExtra("customerRegion", region);
+                        ShippingAddress.this.setResult(RESULT_OK, intent);
+                        ShippingAddress.this.finish();
+                        return;
+                    }
                 }
             }
         });

@@ -1,5 +1,7 @@
 package com.mcdenny.easyshopug;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,6 +26,8 @@ import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +40,7 @@ import com.mcdenny.easyshopug.ViewHolder.CartDetailViewHolder;
 import com.mcdenny.easyshopug.adapters.RecyclerViewAdapter;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,29 +48,60 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import dmax.dialog.SpotsDialog;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static com.mcdenny.easyshopug.ShippingAddress.PICK_ADDRESS_DETAILS;
+
 public class CartDetail extends AppCompatActivity {
-   TextView totalPrice;
+    TextView totalPrice, noCart;
+    ImageView noCartImg;
+    LinearLayout checkoutLayout;
     Button placeOrder;
-    int total;//cart total
-    List<Cart> list;
+    public int total;//cart total
+    List<Cart> list = new ArrayList<>();
+    HashMap<String, List<Cart>> cartItemMap;
 
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
-    private HashMap<String, Cart> cartItemMap;
 
     FirebaseDatabase database;
     DatabaseReference orders;
     DatabaseReference cart;
     String cartKey;
-    public  String currentUser;
+    public String currentUserPhone;
+    public String currentUserName;
 
-    List<Cart> cartOrder = new ArrayList<>();
+    private static final int PICK_ADDRESS = 23;
+    public static final String CUSTOMER_ADDRESS = "CUSTOMER_ADDRESS";
+    public static final String CUSTOMER_CITY = "CUSTOMER_CITY";
+    public static final String CUSTOMER_REGION = "CUSTOMER_REGION";
+    public static final String TOTAL_AMOUNT = "TOTAL_AMOUNT";
+    public static final String CURRENT_USER_PHONE = "CURRENT_USER_PHONE";
+    public static final String CURRENT_USER_NAME = "CURRENT_USER_NAME";
+    public static final String ITEMS_LIST = "ITEMS_LIST";
+
+    private String mCustomerAddress;
+    private String mCustomerCity;
+    private String mCustomerRegion;
     //CartAdapter adapter;
     FirebaseRecyclerAdapter<Cart, CartDetailViewHolder> adapter;
+    android.app.AlertDialog waitingDialog;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //set the fonts
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/QuicksandRegular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
         setContentView(R.layout.activity_cart);
         setTitle("Your Cart");
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -74,13 +110,17 @@ public class CartDetail extends AppCompatActivity {
         cartItemMap = new HashMap<>();
         totalPrice = findViewById(R.id.total);
         placeOrder = findViewById(R.id.place_order_btn);
+        noCart = findViewById(R.id.noCartItem);
+        noCartImg = findViewById(R.id.noCartWaarning);
+        checkoutLayout = findViewById(R.id.checkOutLayout);
 
         placeOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                startActivity(new Intent(CartDetail.this, ShippingAddress.class));
-              //  viewAlertDialog();
+                //startActivity(new Intent(CartDetail.this, ShippingAddress.class));
+                //  viewAlertDialog();
+                pickAddress();
             }
         });
 
@@ -90,54 +130,62 @@ public class CartDetail extends AppCompatActivity {
         cart = database.getReference("Cart");
         cartKey = cart.getKey();
 
-        currentUser = Common.user_Current.getPhone();
+        currentUserPhone = Common.user_Current.getPhone();
+        currentUserName = Common.user_Current.getName();
 
         recyclerView = findViewById(R.id.cartList);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        
+
         //loadCartOrders();
         loadCartDetails();
-
     }
-/**
+
+    private void pickAddress() {
+
+        Intent intent = new Intent(this, ShippingAddress.class);
+        intent.putExtra(PICK_ADDRESS_DETAILS, true);
+        startActivityForResult(intent, PICK_ADDRESS);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_ADDRESS && resultCode == RESULT_OK) {
+
+            mCustomerAddress = data.getStringExtra("customerAddress");
+            mCustomerCity = data.getStringExtra("customerCity");
+            mCustomerRegion = data.getStringExtra("customerRegion");
+            viewAlertDialog();
+        } else {
+            Toast.makeText(this, "No Customer address found!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     //method that is called when place order button is clicked
     private void viewAlertDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(CartDetail.this);
-        alertDialog.setTitle("One more step!");
-        alertDialog.setMessage("Enter your address: ");
+        alertDialog.setTitle("Confirm your details");
+        alertDialog.setMessage("Name: " + currentUserName +
+                "\nContact: " + currentUserPhone +
+                "\nAddress: " + mCustomerRegion + "," + mCustomerCity + "," + mCustomerAddress);
 
-        final EditText editAddress = new EditText(CartDetail.this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        editAddress.setLayoutParams(layoutParams);
-        alertDialog.setView(editAddress);//This adds the edit text to alertdialog
-        alertDialog.setIcon(R.drawable.ic_cart);
 
-        alertDialog.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //Creating a new request
-                Requests requests = new Requests(
-                        Common.user_Current.getName(),
-                        Common.user_Current.getPhone(),
-                        editAddress.getText().toString(),
-                        totalPrice.getText().toString(),
-                        cartOrder
-                );
-
-                //Sending the above data to firebase database
-                orders.child(String.valueOf(System.currentTimeMillis()))
-                        .setValue(requests);
-
-                //Deletes the order cart
-                Toast.makeText(getBaseContext(), "Order successfuly submitted", Toast.LENGTH_LONG).show();
+                final android.app.AlertDialog waitingDialog = new SpotsDialog(CartDetail.this);
+                waitingDialog.show();
+                Intent intent = new Intent(CartDetail.this, CheckoutActivity.class);
+                intent.putExtra(CartDetail.CURRENT_USER_NAME, currentUserName);
+                intent.putExtra(CartDetail.CURRENT_USER_PHONE, currentUserPhone);
+                intent.putExtra(CartDetail.CUSTOMER_ADDRESS, mCustomerAddress);
+                intent.putExtra(CartDetail.CUSTOMER_CITY, mCustomerCity);
+                intent.putExtra(CartDetail.CUSTOMER_REGION, mCustomerRegion);
+                intent.putExtra(CartDetail.ITEMS_LIST, (Serializable)list);
+                intent.putExtra(CartDetail.TOTAL_AMOUNT, total);
+                startActivity(intent);
                 finish();
-
-                cart.setValue(null);
             }
         });
 
@@ -147,21 +195,18 @@ public class CartDetail extends AppCompatActivity {
                 dialogInterface.dismiss();
             }
         });
-
         alertDialog.show();
     }
-    */
 
-    private void loadCartDetails(){
-        //cartItemMap.clear();
-        cart.addValueEventListener(new ValueEventListener() {
+
+    private void loadCartDetails() {
+        waitingDialog = new SpotsDialog(CartDetail.this);
+        waitingDialog.show();
+        cart.child(Common.user_Current.getPhone()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                list = new ArrayList<>();
-                total =0;
+                total = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String userType=snapshot.child("phone").getValue().toString();
-                    if (userType.equals(currentUser)){
                         Cart mCartItem = snapshot.getValue(Cart.class);
                         Cart listCart = new Cart();
                         //cartItemMap.put(dataSnapshot.getKey(), mCartItem);
@@ -169,27 +214,48 @@ public class CartDetail extends AppCompatActivity {
                         listCart.setPrice(mCartItem.getPrice());
                         listCart.setQuantity(mCartItem.getQuantity());
                         list.add(listCart);
+                        cartItemMap.put(snapshot.getKey(), list);
 
                         //calculating the total price
-                        total += (Integer.parseInt(mCartItem.getPrice()))*(Integer.parseInt(mCartItem.getQuantity()));
+                        total += (Integer.parseInt(mCartItem.getPrice())) * (Integer.parseInt(mCartItem.getQuantity()));
                         Locale locale = new Locale("en", "UG");
                         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
                         String totals = String.valueOf(total);
                         totalPrice.setText(numberFormat.format(total));
-
+                        checkoutLayout.setVisibility(View.VISIBLE);
+                        noCart.setVisibility(View.GONE);
+                        noCartImg.setVisibility(View.GONE);
+                        String itemKey = snapshot.getKey();
                         RecyclerViewAdapter recycler = new RecyclerViewAdapter(list);
                         recyclerView.setAdapter(recycler);
                     }
-                    else {
-                        Toast.makeText(CartDetail.this, "Nothing in your Cart", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
+                waitingDialog.dismiss();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                //waitingDialog.dismiss();
+            }
+        });
+    }
 
+    //remove from cart
+    private void removeCart(String key) {
+
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Removing Product from Cart...");
+        progressDialog.show();
+        cart.child(Common.user_Current.getPhone()).child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(CartDetail.this, "Removed item from cart.", Toast.LENGTH_SHORT).show();
+                    loadCartDetails();
+                    progressDialog.dismiss();
+                } else {
+                    progressDialog.dismiss();
+                    Toast.makeText(CartDetail.this, "Failed to remove from cart.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -215,8 +281,8 @@ public class CartDetail extends AppCompatActivity {
             shareIntent.putExtra(Intent.EXTRA_TEXT, "Connect with me on facebook via: www.facebook.com/denislucaz");
             startActivity(Intent.createChooser(shareIntent, "Send Invite Via"));
             return true;
-        } else if(id == R.id.nav_settings){
-            startActivity(new Intent(CartDetail.this,SettingsActivity.class));
+        } else if (id == R.id.nav_settings) {
+            startActivity(new Intent(CartDetail.this, SettingsActivity.class));
             return true;
         }
 

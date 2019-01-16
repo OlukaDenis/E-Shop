@@ -15,7 +15,7 @@ public class Cons {
     }
 
     public static class Vals {
-        public static final String CURRENCY = "Ush. ";
+        public static final String CURRENCY = "UGX. ";
     }
 
     public static class KEYS {

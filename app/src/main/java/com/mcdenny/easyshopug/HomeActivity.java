@@ -1,5 +1,6 @@
 package com.mcdenny.easyshopug;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -33,6 +34,8 @@ import com.squareup.picasso.Picasso;
 
 import io.paperdb.Paper;
 import mehdi.sakout.fancybuttons.FancyButton;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -60,8 +63,18 @@ public class HomeActivity extends AppCompatActivity
     private boolean allowBackButtonExit = false;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //set the fonts
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/QuicksandRegular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar1);
         toolbar.setTitle("Quick Duuka");

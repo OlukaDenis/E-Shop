@@ -16,12 +16,6 @@ public class AddressViewHolder extends RecyclerView.ViewHolder implements View.O
     public AddressViewHolder(@NonNull View itemView) {
         super(itemView);
 
-        destination = itemView.findViewById(R.id.destinationTextView);
-        name = itemView.findViewById(R.id.set_name);
-        area = itemView.findViewById(R.id.set_area);
-        division = itemView.findViewById(R.id.set_division);
-        district = itemView.findViewById(R.id.set_district);
-        phone = itemView.findViewById(R.id.set_phone);
         //total = (TextView) itemView.findViewById(R.id.cart_item_count);
     }
 

@@ -8,7 +8,7 @@
     android:weightSum="10"
     tools:context=".CartDetail">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="9">
@@ -18,12 +18,30 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/transparent" />
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/noCartWaarning"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:scaleType="fitCenter"
+            android:layout_marginTop="100dp"
+            android:src="@drawable/ic_warning"/>
+        <TextView
+            android:id="@+id/noCartItem"
+            android:layout_below="@+id/noCartWaarning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textSize="20sp"
+            android:layout_marginTop="30dp"
+            android:text="No items in your cart"/>
+    </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/checkOutLayout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:visibility="gone"
         android:layout_weight="1">
 
         <LinearLayout
@@ -39,7 +57,7 @@
                 android:layout_width="0dp"
                 android:background="@color/light_blue"
                 android:layout_height="match_parent"
-                tools:text="50,000"
+                tools:text=""
                 android:gravity="center_vertical"
                 android:textColor="@android:color/black"
                 android:textSize="24sp"

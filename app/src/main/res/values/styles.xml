@@ -6,15 +6,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:fontFamily">@fonts/QuicksandLight.ttf</item>
-        <item name="fontFamily">@fonts/QuicksandLight.ttf</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:fontFamily">@fonts/QuicksandRegular.ttf</item>
-        <item name="fontFamily">@fonts/QuicksandRegular.ttf</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -38,6 +34,9 @@
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:color">@android:color/white</item>
+    </style>
+    <style name="checkoutStyle">
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>

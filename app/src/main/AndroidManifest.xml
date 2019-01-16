@@ -71,7 +71,12 @@
         <activity android:name=".TermsActivity"
             android:label="@string/terms"/>
         <activity android:name=".AboutUs"
-            android:label="About Us"/>
+            android:label="About Us"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mcdenny.easyshopug.HomeActivity" />
+        </activity>
         <activity
             android:name="com.mcdenny.easyshopug.CheckoutActivity"
             android:label="Check out">
@@ -81,7 +86,12 @@
         </activity>
 
         <activity android:name=".SettingsActivity"
-            android:label="@string/action_settings"/>
+            android:label="@string/action_settings"
+            android:theme="@style/AppTheme">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.mcdenny.easyshopug.HomeActivity"/>
+        </activity>
         <activity android:name=".ShippingAddress"
             android:label="Addresses"/>
     </application>

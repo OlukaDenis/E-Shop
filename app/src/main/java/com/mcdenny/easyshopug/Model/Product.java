@@ -3,7 +3,7 @@ package com.mcdenny.easyshopug.Model;
 import java.io.Serializable;
 
 public class Product implements Serializable {
-    private String Name, Image, Description, Price, Discount, MenuID;
+    private String Name, Image, Description, Price, Discount, menuid;
     public Product() {
     }
 
@@ -13,7 +13,7 @@ public class Product implements Serializable {
         Description = description;
         Price = price;
         Discount = discount;
-        MenuID = menuID;
+        menuid = menuID;
     }
 
     public String getName() {
@@ -57,10 +57,10 @@ public class Product implements Serializable {
     }
 
     public String getMenuID() {
-        return MenuID;
+        return menuid;
     }
 
     public void setMenuID(String menuID) {
-        MenuID = menuID;
+        menuid = menuID;
     }
 }

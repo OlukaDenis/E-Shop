@@ -11,14 +11,12 @@ import com.mcdenny.easyshopug.R;
 
 public class CartDetailViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     public TextView cart_item_name, cart_item_price;
-    public ImageView cart_item_count;
     public ItemClickListener itemClickListener;
 
     public CartDetailViewHolder(@NonNull View itemView) {
         super(itemView);
         cart_item_name = (TextView) itemView.findViewById(R.id.cart_item_name);
         cart_item_price = (TextView) itemView.findViewById(R.id.cart_item_price);
-        cart_item_count = (ImageView) itemView.findViewById(R.id.cart_item_count);
     }
 
     public void setItemClickListener(ItemClickListener itemClickListener) {

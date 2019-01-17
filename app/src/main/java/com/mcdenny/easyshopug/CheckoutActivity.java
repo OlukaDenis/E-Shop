@@ -1,3 +1,4 @@
+
 package com.mcdenny.easyshopug;
 
 import android.annotation.SuppressLint;
@@ -159,53 +160,7 @@ public class CheckoutActivity extends AppCompatActivity {
                     }
                 });
 
-
-                /*
-                cart.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            String userType = snapshot.child("phone").getValue().toString();
-                            if (userType.equals(mCustomerPhone)) {
-
-                            }
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-                    */
-
-
-                /* TODO Add mobile money integration
-                 */
-                //TODO Delete from Cart
             }
         });
     }
-
-    /*
-    private void populateAddress() {
-        addressAdapter = new FirebaseRecyclerAdapter<Address, AddressViewHolder>(
-                Address.class,
-                R.layout.activity_checkout,
-                AddressViewHolder.class,
-                address
-        ) {
-            @Override
-            protected void populateViewHolder(AddressViewHolder viewHolder, Address addressModel, int position) {
-                    viewHolder.destination.setText(R.string.destination);
-                    viewHolder.name.setText(addressModel.getAddressName());
-                    viewHolder.area.setText(addressModel.getAddressArea());
-                    viewHolder.division.setText(addressModel.getAddressDivision());
-                    viewHolder.district.setText(addressModel.getAddressDistrict());
-                    viewHolder.phone.setText(addressModel.getAddressPhone());
-            }
-        };
-    }*/
-
 }

@@ -51,5 +51,7 @@ dependencies {
     implementation 'io.paperdb:paperdb:2.1'
     implementation 'com.github.rey5137:material:1.2.4'
     implementation 'com.github.d-max:spots-dialog:0.7@aar'
+   // implementation 'com.hariofspades.IncDec:incdeclibrary:0.0.5'
+    //implementation 'me.himanshusoni.quantityview:quantity-view:1.2.0'
 }
 apply plugin: 'com.google.gms.google-services'

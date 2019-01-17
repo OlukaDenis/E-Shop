@@ -212,6 +212,7 @@ public class CartDetail extends AppCompatActivity {
                         //cartItemMap.put(dataSnapshot.getKey(), mCartItem);
                         listCart.setName(mCartItem.getName());
                         listCart.setPrice(mCartItem.getPrice());
+                        listCart.setImage(mCartItem.getImage());
                         listCart.setQuantity(mCartItem.getQuantity());
                         list.add(listCart);
                         cartItemMap.put(snapshot.getKey(), list);
@@ -222,11 +223,12 @@ public class CartDetail extends AppCompatActivity {
                         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
                         String totals = String.valueOf(total);
                         totalPrice.setText(numberFormat.format(total));
+                        //default view when the cart is empty
                         checkoutLayout.setVisibility(View.VISIBLE);
                         noCart.setVisibility(View.GONE);
                         noCartImg.setVisibility(View.GONE);
                         String itemKey = snapshot.getKey();
-                        RecyclerViewAdapter recycler = new RecyclerViewAdapter(list);
+                        RecyclerViewAdapter recycler = new RecyclerViewAdapter(getApplicationContext(),list);
                         recyclerView.setAdapter(recycler);
                     }
                 waitingDialog.dismiss();
@@ -240,24 +242,32 @@ public class CartDetail extends AppCompatActivity {
     }
 
     //remove from cart
-    private void removeCart(String key) {
-
+    private void removeCart(final String key) {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Removing Product from Cart...");
-        progressDialog.show();
-        cart.child(Common.user_Current.getPhone()).child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+        final Button remove_cart = (Button) findViewById(R.id.remove_cart_item);
+        remove_cart.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(CartDetail.this, "Removed item from cart.", Toast.LENGTH_SHORT).show();
-                    loadCartDetails();
-                    progressDialog.dismiss();
-                } else {
-                    progressDialog.dismiss();
-                    Toast.makeText(CartDetail.this, "Failed to remove from cart.", Toast.LENGTH_SHORT).show();
-                }
+            public void onClick(View v) {
+
+                progressDialog.show();
+                cart.child(Common.user_Current.getPhone()).child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(CartDetail.this, "Removed item from cart.", Toast.LENGTH_SHORT).show();
+                            loadCartDetails();
+                            progressDialog.dismiss();
+                        } else {
+                            progressDialog.dismiss();
+                            Toast.makeText(CartDetail.this, "Failed to remove from cart.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
+
+
     }
 
     @Override

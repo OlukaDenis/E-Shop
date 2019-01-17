@@ -180,11 +180,11 @@ public class ProductList extends AppCompatActivity {
     }
 
     private void loadSuggest() {
-<<<<<<< HEAD
-        productItemList.orderByChild("menuid").equalTo(categoryId)
-=======
+
+        productItemList.orderByChild("menuid").equalTo(categoryId);
+
         productItemList.orderByChild("menuId").equalTo(categoryId)
->>>>>>> abc4ec53811f1a790ed9243c82e34b394f60e74f
+
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

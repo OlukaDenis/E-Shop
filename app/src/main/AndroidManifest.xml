@@ -68,9 +68,11 @@
                 android:value="com.mcdenny.easyshopug.HomeActivity" />
         </activity>
         <activity android:name=".ForgotPasswordActivity" />
-        <activity android:name=".TermsActivity"
-            android:label="@string/terms"/>
-        <activity android:name=".AboutUs"
+        <activity
+            android:name=".TermsActivity"
+            android:label="@string/terms" />
+        <activity
+            android:name=".AboutUs"
             android:label="About Us"
             android:theme="@style/AppTheme">
             <meta-data
@@ -78,22 +80,28 @@
                 android:value="com.mcdenny.easyshopug.HomeActivity" />
         </activity>
         <activity
-            android:name="com.mcdenny.easyshopug.CheckoutActivity"
+            android:name=".CheckoutActivity"
             android:label="Check out">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mcdenny.easyshopug.ShippingAddress" />
         </activity>
-
-        <activity android:name=".SettingsActivity"
+        <activity
+            android:name=".SettingsActivity"
             android:label="@string/action_settings"
             android:theme="@style/AppTheme">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.mcdenny.easyshopug.HomeActivity"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mcdenny.easyshopug.HomeActivity" />
         </activity>
-        <activity android:name=".ShippingAddress"
-            android:label="Addresses"/>
+        <activity
+            android:name=".ShippingAddress"
+            android:label="Addresses" />
+
+        <service
+            android:name=".Service.ListenOrder"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

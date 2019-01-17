@@ -1,68 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:layout_marginBottom="8dp"
     app:cardElevation="6dp">
 
     <LinearLayout
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        android:weightSum="10">
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_weight="7"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/cart_item_name"
-                android:gravity="center_vertical|start"
-                android:layout_width="wrap_content"
-                android:textSize="18sp"
-                android:textColor="@color/colorPrimaryDark"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:textAllCaps="true"
+            <ImageView
+                android:id="@+id/cart_image"
+                android:layout_weight="1"
+                android:layout_width="100dp"
+                android:scaleType="centerInside"
                 android:layout_height="wrap_content"
-                tools:text="Product 01"/>
+                android:src="@drawable/good" />
 
-            <TextView
-                android:id="@+id/cart_item_price"
-                android:gravity="center_vertical|start"
-                android:layout_width="wrap_content"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorAccent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:textAllCaps="true"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                tools:text="100,000"/>
+                android:layout_weight="6"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/cart_item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center_vertical|start"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:text="Product 01" />
+
+                <TextView
+                    android:id="@+id/cart_item_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center_vertical|start"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="18sp"
+                    tools:text="100,000" />
 
 
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:layout_weight="6">
+
+                <Button
+                    android:id="@+id/remove_cart_item"
+                    android:layout_width="30dp"
+                    android:layout_marginLeft="150dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center|end"
+                    android:background="@drawable/ic_delete" />
+            </LinearLayout>
+            <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+                android:id="@+id/enb_cart_add_subtract"
+                android:layout_width="10dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical|end"
+                android:layout_weight="3"
+                android:gravity="end"
+                app:backGroundColor="@color/colorPrimary"
+                app:finalNumber="20"
+                app:initialNumber="1"
+                app:textSize="10sp" />
 
         </LinearLayout>
 
-        <ImageView
-            android:layout_gravity="center_vertical|end"
-            android:id="@+id/cart_item_count"
-            android:layout_marginRight="5dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"/>
-
     </LinearLayout>
-    <Button
-        android:layout_gravity="end"
-        android:id="@+id/remove_cart_item"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/ic_delete"/>
+
 
 </android.support.v7.widget.CardView>

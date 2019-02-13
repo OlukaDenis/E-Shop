@@ -53,7 +53,10 @@ public class OrderStatus extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         orderRecylerView.setLayoutManager(layoutManager);
 
-        loadOrderStatus(Common.user_Current.getPhone());
+        if(getIntent() == null)
+            loadOrderStatus(Common.user_Current.getPhone());
+        else
+            loadOrderStatus(getIntent().getStringExtra("userPhone"));
     }
 
     private void loadOrderStatus(final String phone) {
@@ -68,23 +71,13 @@ public class OrderStatus extends AppCompatActivity {
                 viewHolder.txtOrderId.setText(adapter.getRef(position).getKey());
                 viewHolder.txtOrderPhone.setText(model.getContact());
                 viewHolder.txtOrderAddress.setText(model.getAddress());
-                viewHolder.txtOrderStatus.setText(convertCodeToStatus(model.getStatus()));
+                viewHolder.txtOrderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
             }
         };
         orderRecylerView.setAdapter(adapter);
     }
 
-    private String convertCodeToStatus(String status) {
-        if(status.equals("0")){
-            return "Placed";
-        }
-        else if(status.equals("1")){
-            return "Still in process";
-        }
-        else {
-            return "Shipped";
-        }
-    }
+
 
     @Override
     public boolean onSupportNavigateUp() {

@@ -26,5 +26,16 @@ public class Common {
         }
         return false;
     }
+    public static String convertCodeToStatus(String status) {
+        if(status.equals("0")){
+            return "Placed";
+        }
+        else if(status.equals("1")){
+            return "Currently Being Shipped";
+        }
+        else {
+            return "Shipped";
+        }
+    }
 }
 

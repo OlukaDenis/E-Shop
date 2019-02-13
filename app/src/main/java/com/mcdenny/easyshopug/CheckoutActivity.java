@@ -1,6 +1,8 @@
+
 package com.mcdenny.easyshopug;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,13 +13,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mcdenny.easyshopug.Common.Common;
 import com.mcdenny.easyshopug.Model.Address;
 import com.mcdenny.easyshopug.Model.Cart;
 import com.mcdenny.easyshopug.Model.Requests;
@@ -57,6 +63,7 @@ public class CheckoutActivity extends AppCompatActivity {
     private String mCustomerName;
     private String mCustomerPhone;
     private int orderTotal;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -84,10 +91,15 @@ public class CheckoutActivity extends AppCompatActivity {
 
         cartItemMap = new HashMap<>();
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setTitle("Placing Order");
+
         //initialise firebase
         database = FirebaseDatabase.getInstance();
         orders = database.getReference("Requests");
         cart = database.getReference("Cart");
+        final String orderKey = orders.push().getKey();
 
         final android.app.AlertDialog waitingDialog = new SpotsDialog(CheckoutActivity.this);
         waitingDialog.dismiss();
@@ -119,6 +131,8 @@ public class CheckoutActivity extends AppCompatActivity {
         checkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressDialog.setTitle("Submitting Order");
+                progressDialog.show();
                 final Requests requests = new Requests(
                        mCustomerName,
                         mCustomerPhone,
@@ -127,57 +141,26 @@ public class CheckoutActivity extends AppCompatActivity {
                         cartOrder
                 );
                 //Sending the above data to firebase database
-                orders.child(String.valueOf(System.currentTimeMillis()))
-                        .setValue(requests);
-                Intent intent = new Intent(CheckoutActivity.this, CartDetail.class);
-                startActivity(intent);
-                finish();
-                /*
-                cart.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            String userType = snapshot.child("phone").getValue().toString();
-                            if (userType.equals(mCustomerPhone)) {
 
-                            }
+                orders.child(orderKey).setValue(requests).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            progressDialog.dismiss();
+                            cart.child(Common.user_Current.getPhone()).removeValue();
+                            Intent intent = new Intent(CheckoutActivity.this, CartDetail.class);
+                            startActivity(intent);
+                            Toast.makeText(CheckoutActivity.this, "Successfully placed your order.", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        else {
+                            progressDialog.dismiss();
+                            Toast.makeText(CheckoutActivity.this, "Failed to place the order.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
-                    */
 
-
-                /* TODO Add mobile money integration
-                 */
-                //TODO Delete from Cart
             }
         });
     }
-
-    /*
-    private void populateAddress() {
-        addressAdapter = new FirebaseRecyclerAdapter<Address, AddressViewHolder>(
-                Address.class,
-                R.layout.activity_checkout,
-                AddressViewHolder.class,
-                address
-        ) {
-            @Override
-            protected void populateViewHolder(AddressViewHolder viewHolder, Address addressModel, int position) {
-                    viewHolder.destination.setText(R.string.destination);
-                    viewHolder.name.setText(addressModel.getAddressName());
-                    viewHolder.area.setText(addressModel.getAddressArea());
-                    viewHolder.division.setText(addressModel.getAddressDivision());
-                    viewHolder.district.setText(addressModel.getAddressDistrict());
-                    viewHolder.phone.setText(addressModel.getAddressPhone());
-            }
-        };
-    }*/
-
 }

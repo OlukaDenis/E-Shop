@@ -27,6 +27,7 @@ import com.google.firebase.storage.StorageReference;
 import com.mcdenny.easyshopug.Common.Common;
 import com.mcdenny.easyshopug.Interface.ItemClickListener;
 import com.mcdenny.easyshopug.Model.Category;
+import com.mcdenny.easyshopug.Service.ListenOrder;
 import com.mcdenny.easyshopug.ViewHolder.MenuViewHolder;
 import com.mcdenny.easyshopug.ViewHolder.RecyclerGrid;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -108,6 +109,8 @@ public class HomeActivity extends AppCompatActivity
 
         if (Common.isNetworkAvailable(getApplicationContext())){
             loadMenu();
+            Intent service = new Intent(HomeActivity.this, ListenOrder.class);
+            startService(service);
         }
         else {
             Toast.makeText(HomeActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
@@ -157,7 +160,7 @@ public class HomeActivity extends AppCompatActivity
             // Home index activity
         }
         else if(id == R.id.order_history){
-            startActivity(new Intent(getApplicationContext(), OrderStatus.class));
+            startActivity(new Intent(HomeActivity.this, OrderStatus.class));
         } else if (id == R.id.nav_settings) {
             startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
         } else if (id == R.id.nav_about) {

@@ -1,9 +1,22 @@
 package com.mcdenny.easyshopug.Model;
 
+import android.widget.ImageView;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class Cart {
+public class Cart implements Serializable {
     private String Phone, Name, Image, Description, Price, Discount, quantity;
+
+    public String toString() {
+        return "Phone: " + Phone +
+                "\nName: " + Name +
+                "\nImage: " + Image +
+                "\nDescription: " + Description +
+                "\nPrice: " + Price +
+                "\nDiscount: " + Discount +
+                "\nQuantity: " + quantity;
+    }
 
     public Cart(){
     }

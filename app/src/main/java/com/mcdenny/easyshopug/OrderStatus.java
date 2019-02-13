@@ -1,5 +1,6 @@
 package com.mcdenny.easyshopug;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,9 @@ import com.mcdenny.easyshopug.Common.Common;
 import com.mcdenny.easyshopug.Model.Requests;
 import com.mcdenny.easyshopug.ViewHolder.OrderViewHolder;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class OrderStatus extends AppCompatActivity {
     public RecyclerView orderRecylerView;
     public RecyclerView.LayoutManager layoutManager;
@@ -25,8 +29,18 @@ public class OrderStatus extends AppCompatActivity {
     FirebaseRecyclerAdapter<Requests, OrderViewHolder> adapter;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //set the fonts
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/QuicksandLight.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
         setContentView(R.layout.activity_order_status);
         setTitle("Your Orders");
 
@@ -39,7 +53,10 @@ public class OrderStatus extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         orderRecylerView.setLayoutManager(layoutManager);
 
-        loadOrderStatus(Common.user_Current.getPhone());
+        if(getIntent() == null)
+            loadOrderStatus(Common.user_Current.getPhone());
+        else
+            loadOrderStatus(getIntent().getStringExtra("userPhone"));
     }
 
     private void loadOrderStatus(final String phone) {
@@ -54,23 +71,13 @@ public class OrderStatus extends AppCompatActivity {
                 viewHolder.txtOrderId.setText(adapter.getRef(position).getKey());
                 viewHolder.txtOrderPhone.setText(model.getContact());
                 viewHolder.txtOrderAddress.setText(model.getAddress());
-                viewHolder.txtOrderStatus.setText(convertCodeToStatus(model.getStatus()));
+                viewHolder.txtOrderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
             }
         };
         orderRecylerView.setAdapter(adapter);
     }
 
-    private String convertCodeToStatus(String status) {
-        if(status.equals("0")){
-            return "Placed";
-        }
-        else if(status.equals("1")){
-            return "Still in process";
-        }
-        else {
-            return "Shipped";
-        }
-    }
+
 
     @Override
     public boolean onSupportNavigateUp() {

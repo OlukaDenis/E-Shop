@@ -1,5 +1,7 @@
 package com.mcdenny.easyshopug;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class ProductList extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
@@ -45,10 +50,19 @@ public class ProductList extends AppCompatActivity {
     FirebaseRecyclerAdapter<Product,ProductViewHolder> searchAdapter;
     List<String> suggestList = new ArrayList<>();
     MaterialSearchBar materialSearchBar;
-
+    private ProgressDialog progressDialog;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //set the fonts
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/QuicksandLight.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_list);
 
@@ -60,6 +74,7 @@ public class ProductList extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
+        progressDialog = new ProgressDialog(this);
 
         //getting the intent from the home activity
         if(getIntent() != null){
@@ -133,19 +148,20 @@ public class ProductList extends AppCompatActivity {
                 Product.class,
                 R.layout.product_list_layout,
                 ProductViewHolder.class,
-                productItemList.orderByChild("Name").equalTo(text.toString())//compare the names
+                productItemList.orderByChild("name").equalTo(text.toString())//compare the names
         ) {
             @Override
             protected void populateViewHolder(ProductViewHolder viewHolder, Product model, int position) {
+                progressDialog.setTitle("Loading "+toolbarTitle);
+                progressDialog.show();
                 viewHolder.productItemName.setText(model.getName());
-
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(viewHolder.productItemImage);
-
                 //the name on the toolbar
                 Bundle bundle = getIntent().getExtras();
                 toolbarTitle = bundle.getString("Title_key");
                 setTitle(toolbarTitle);
+                progressDialog.dismiss();
 
                 final Product productItem = model;
                 viewHolder.setItemClickListener(new ItemClickListener() {
@@ -164,7 +180,11 @@ public class ProductList extends AppCompatActivity {
     }
 
     private void loadSuggest() {
-        productItemList.orderByChild("MenuID").equalTo(categoryId)
+
+        productItemList.orderByChild("menuid").equalTo(categoryId);
+
+        productItemList.orderByChild("menuId").equalTo(categoryId)
+
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -187,7 +207,7 @@ public class ProductList extends AppCompatActivity {
                 Product.class,
                 R.layout.product_list_layout,
                 ProductViewHolder.class,
-                productItemList.orderByChild("MenuID").equalTo(categoryId)//getting product items where menuID equals to category id
+                productItemList.orderByChild("menuid").equalTo(categoryId)//getting product items where menuID equals to category id
         ) {
             @Override
             protected void populateViewHolder(ProductViewHolder viewHolder, Product model, int position) {

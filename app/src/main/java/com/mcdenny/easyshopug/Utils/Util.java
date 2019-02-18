@@ -7,6 +7,32 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Util {
+    private String XreferenceId = "c72025f5-5cd1-5530-99e4-8ba4722fad46";
+    private String apiKey = "3f2c21fb9e384b0a8e6c2f0512becfae";
+    private String subscriptionKey = "703e4eaf5049405bbc09906d134a335b";
+    private String targetEnvironment = "application/json";
+    private String contentType = "sandbox";
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public String getXreferenceId() {
+        return XreferenceId;
+    }
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public String getSubscriptionKey() {
+        return subscriptionKey;
+    }
+
+    public String getTargetEnvironment() {
+        return targetEnvironment;
+    }
+
     public static String cleanEmailKey(String email) {
         if(TextUtils.isEmpty(email))
             return null;

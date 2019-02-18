@@ -11,7 +11,7 @@ import com.mcdenny.easyshopug.R;
 
 public class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     public TextView productItemName, productItemPrice;
-    public ImageView productItemImage;
+    public ImageView productItemImage, favoriteImage;
     private ItemClickListener itemClickListener;
 
     public ProductViewHolder(@NonNull View itemView) {
@@ -20,6 +20,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
         productItemName = (TextView) itemView.findViewById(R.id.item_name);
         productItemPrice = (TextView) itemView.findViewById(R.id.item_price);
         productItemImage = (ImageView) itemView.findViewById(R.id.item_image);
+        favoriteImage = (ImageView) itemView.findViewById(R.id.img_favorite);
         itemView.setOnClickListener(this);
     }
 

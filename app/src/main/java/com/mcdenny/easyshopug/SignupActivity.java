@@ -111,7 +111,7 @@ public class SignupActivity extends AppCompatActivity {
                                     Toast.makeText(SignupActivity.this, "User phone already exists", Toast.LENGTH_SHORT).show();
                                 }
 
-                                //if user doesnot exist, creates new
+                                //if user does not exist, creates new
                                 else {
                                     waitingDialog.dismiss();
                                     User user = new User(usrname.getText().toString(), usrpassword.getText().toString());
@@ -142,7 +142,7 @@ public class SignupActivity extends AppCompatActivity {
             finish();
             startActivity(new Intent(this, LoginActivity.class));
         }
-    }
+    }// end of onCreate method
     @Override
     protected void onResume() {
         super.onResume();
@@ -150,6 +150,6 @@ public class SignupActivity extends AppCompatActivity {
         if (com.mcdenny.easyshopug.Utils.Permissions.isUserVerified(this)) {
             finish();
         }
-    } // end of onCreate method
+    }
 
 }

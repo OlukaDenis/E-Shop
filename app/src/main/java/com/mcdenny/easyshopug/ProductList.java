@@ -4,12 +4,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +22,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mcdenny.easyshopug.Common.Common;
@@ -41,6 +45,7 @@ public class ProductList extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     FirebaseDatabase database;
     DatabaseReference productItemList;
+    DatabaseReference favoriteItem;
     FirebaseRecyclerAdapter<Product, ProductViewHolder> adapter;
 
     String categoryId = "";
@@ -69,6 +74,7 @@ public class ProductList extends AppCompatActivity {
         //firebase init
         database = FirebaseDatabase.getInstance();
         productItemList = database.getReference("Products");
+        favoriteItem = database.getReference("Favorites");
 
         recyclerView = findViewById(R.id.recycler_product);
         recyclerView.setHasFixedSize(true);
@@ -151,7 +157,7 @@ public class ProductList extends AppCompatActivity {
                 productItemList.orderByChild("name").equalTo(text.toString())//compare the names
         ) {
             @Override
-            protected void populateViewHolder(ProductViewHolder viewHolder, Product model, int position) {
+            protected void populateViewHolder(ProductViewHolder viewHolder, final Product model, final int position) {
                 progressDialog.setTitle("Loading "+toolbarTitle);
                 progressDialog.show();
                 viewHolder.productItemName.setText(model.getName());
@@ -175,7 +181,6 @@ public class ProductList extends AppCompatActivity {
                 });
             }
         };
-
         recyclerView.setAdapter(searchAdapter);//set adapter for recycler view is search result
     }
 
@@ -210,7 +215,7 @@ public class ProductList extends AppCompatActivity {
                 productItemList.orderByChild("menuid").equalTo(categoryId)//getting product items where menuID equals to category id
         ) {
             @Override
-            protected void populateViewHolder(ProductViewHolder viewHolder, Product model, int position) {
+            protected void populateViewHolder(final ProductViewHolder viewHolder, final Product model, final int position) {
                 viewHolder.productItemName.setText(model.getName());
                 Locale locale = new Locale("en", "UG");
                 NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
@@ -232,6 +237,71 @@ public class ProductList extends AppCompatActivity {
                         //Getting the category key id and sending it to the product list activity
                         productDetail.putExtra("ProductListID", adapter.getRef(position).getKey());
                         startActivity(productDetail);
+                    }
+                });
+
+                //adding to favorite
+                viewHolder.favoriteImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final String itemKey = adapter.getRef(position).getKey();
+                        DatabaseReference favoriteRef = favoriteItem.child(Common.user_Current.getPhone()).child(itemKey);
+                        try{
+                            favoriteRef.runTransaction(new Transaction.Handler() {
+                                @NonNull
+                                @Override
+                                public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+
+                                    Product product = mutableData.getValue(Product.class);
+                                    if (product == null) {
+                                        // favorite does not exist, create it
+                                        viewHolder.favoriteImage.setImageResource(R.drawable.ic_favorite_black_24dp);
+                                        mutableData.setValue(model);
+                                        Toast.makeText(ProductList.this, "Product added to favorites", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {
+                                        // favorite exists, remove it
+                                        viewHolder.favoriteImage.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                                        mutableData.setValue(null);
+                                        Toast.makeText(ProductList.this, "Product removed from favorites", Toast.LENGTH_SHORT).show();
+                                    }
+                                    return Transaction.success(mutableData);
+                                }
+
+                                @Override
+                                public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+                                    // Transaction completed
+                                    // Log.d(TAG, "toggleFavorite:onComplete:" + databaseError);
+                                }
+                            });
+                        } catch (Exception e) {
+                            Toast.makeText(ProductList.this , e.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                        /*
+                        favoriteItem.child(Common.user_Current.getPhone()).child(itemKey).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.child(itemKey).equals(itemKey)){
+                                    viewHolder.favoriteImage.setImageResource(R.drawable.ic_favorite_black_24dp);
+                                    Toast.makeText(ProductList.this, itemKey + "Exists", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    String me = dataSnapshot.getKey();
+                                    viewHolder.favoriteImage.setImageResource(R.drawable.ic_favorite_black_24dp);
+                                    favoriteItem.child(Common.user_Current.getPhone()).child(itemKey).setValue(model);
+                                    Toast.makeText(ProductList.this, me +"added to favorites", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });*/
+
+
                     }
                 });
             }

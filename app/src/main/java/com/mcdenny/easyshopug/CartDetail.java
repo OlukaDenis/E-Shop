@@ -4,27 +4,24 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amulyakhare.textdrawable.TextDrawable;
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,16 +32,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mcdenny.easyshopug.Common.Common;
 import com.mcdenny.easyshopug.Model.Cart;
-import com.mcdenny.easyshopug.Model.Requests;
 import com.mcdenny.easyshopug.ViewHolder.CartDetailViewHolder;
-import com.mcdenny.easyshopug.adapters.RecyclerViewAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -69,7 +63,8 @@ public class CartDetail extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference orders;
     DatabaseReference cart;
-    String cartKey;
+    public String cartItemKey;
+
     public String currentUserPhone;
     public String currentUserName;
 
@@ -86,7 +81,7 @@ public class CartDetail extends AppCompatActivity {
     private String mCustomerCity;
     private String mCustomerRegion;
     //CartAdapter adapter;
-    FirebaseRecyclerAdapter<Cart, CartDetailViewHolder> adapter;
+    //FirebaseRecyclerAdapter<Cart, CartDetailViewHolder> adapter;
     android.app.AlertDialog waitingDialog;
 
     @Override
@@ -128,7 +123,7 @@ public class CartDetail extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         orders = database.getReference("Requests");
         cart = database.getReference("Cart");
-        cartKey = cart.getKey();
+        //cartKey = cart.getKey();
 
         currentUserPhone = Common.user_Current.getPhone();
         currentUserName = Common.user_Current.getName();
@@ -182,7 +177,7 @@ public class CartDetail extends AppCompatActivity {
                 intent.putExtra(CartDetail.CUSTOMER_ADDRESS, mCustomerAddress);
                 intent.putExtra(CartDetail.CUSTOMER_CITY, mCustomerCity);
                 intent.putExtra(CartDetail.CUSTOMER_REGION, mCustomerRegion);
-                intent.putExtra(CartDetail.ITEMS_LIST, (Serializable)list);
+                intent.putExtra(CartDetail.ITEMS_LIST, (Serializable) list);
                 intent.putExtra(CartDetail.TOTAL_AMOUNT, total);
                 startActivity(intent);
                 finish();
@@ -198,7 +193,6 @@ public class CartDetail extends AppCompatActivity {
         alertDialog.show();
     }
 
-
     private void loadCartDetails() {
         waitingDialog = new SpotsDialog(CartDetail.this);
         waitingDialog.show();
@@ -207,30 +201,31 @@ public class CartDetail extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 total = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Cart mCartItem = snapshot.getValue(Cart.class);
-                        Cart listCart = new Cart();
-                        //cartItemMap.put(dataSnapshot.getKey(), mCartItem);
-                        listCart.setName(mCartItem.getName());
-                        listCart.setPrice(mCartItem.getPrice());
-                        listCart.setImage(mCartItem.getImage());
-                        listCart.setQuantity(mCartItem.getQuantity());
-                        list.add(listCart);
-                        cartItemMap.put(snapshot.getKey(), list);
+                    Cart mCartItem = snapshot.getValue(Cart.class);
+                    Cart listCart = new Cart();
+                    //cartItemMap.put(dataSnapshot.getKey(), mCartItem);
+                    listCart.setName(mCartItem.getName());
+                    listCart.setPrice(mCartItem.getPrice());
+                    listCart.setImage(mCartItem.getImage());
+                    listCart.setQuantity(mCartItem.getQuantity());
+                    list.add(listCart);
+                    cartItemMap.put(snapshot.getKey(), list);
 
-                        //calculating the total price
-                        total += (Integer.parseInt(mCartItem.getPrice())) * (Integer.parseInt(mCartItem.getQuantity()));
-                        Locale locale = new Locale("en", "UG");
-                        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
-                        String totals = String.valueOf(total);
-                        totalPrice.setText(numberFormat.format(total));
-                        //default view when the cart is empty
-                        checkoutLayout.setVisibility(View.VISIBLE);
-                        noCart.setVisibility(View.GONE);
-                        noCartImg.setVisibility(View.GONE);
-                        String itemKey = snapshot.getKey();
-                        RecyclerViewAdapter recycler = new RecyclerViewAdapter(getApplicationContext(),list);
-                        recyclerView.setAdapter(recycler);
-                    }
+                    //calculating the total price
+                    total += (Integer.parseInt(mCartItem.getPrice())) * (Integer.parseInt(mCartItem.getQuantity()));
+                    Locale locale = new Locale("en", "UG");
+                    NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+                    String totals = String.valueOf(total);
+                    totalPrice.setText(numberFormat.format(total));
+                    //default view when the cart is empty
+                    checkoutLayout.setVisibility(View.VISIBLE);
+                    noCart.setVisibility(View.GONE);
+                    noCartImg.setVisibility(View.GONE);
+                    cartItemKey = snapshot.getKey();
+                    RecyclerViewAdapter recycler = new RecyclerViewAdapter(getApplicationContext(), list);
+                    recyclerView.setAdapter(recycler);
+                    //recycler.notifyDataSetChanged();
+                }
                 waitingDialog.dismiss();
             }
 
@@ -245,28 +240,22 @@ public class CartDetail extends AppCompatActivity {
     private void removeCart(final String key) {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Removing Product from Cart...");
-        final Button remove_cart = (Button) findViewById(R.id.remove_cart_item);
-        remove_cart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                progressDialog.show();
-                cart.child(Common.user_Current.getPhone()).child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(CartDetail.this, "Removed item from cart.", Toast.LENGTH_SHORT).show();
-                            loadCartDetails();
-                            progressDialog.dismiss();
-                        } else {
-                            progressDialog.dismiss();
-                            Toast.makeText(CartDetail.this, "Failed to remove from cart.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        progressDialog.show();
+        cart.child(Common.user_Current.getPhone()).child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(CartDetail.this, "Removed item from cart.", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+                else {
+                    progressDialog.dismiss();
+                    Toast.makeText(CartDetail.this, "Failed to remove from cart.", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
-
 
     }
 
@@ -298,4 +287,63 @@ public class CartDetail extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyHolder>{
+        private Context context;
+        private List<Cart> listCart;
+
+
+        public RecyclerViewAdapter(Context context, List<Cart> listCart) {
+            this.listCart = listCart;
+            this.context = context;
+        }
+
+        @NonNull
+        @Override
+        public RecyclerViewAdapter.MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_layout,parent,false);
+            RecyclerViewAdapter.MyHolder myHolder = new RecyclerViewAdapter.MyHolder(view);
+            return myHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerViewAdapter.MyHolder holder, int position) {
+            Cart data = listCart.get(position);
+            holder.cart_item_name.setText(data.getName());
+            holder.cart_item_price.setText(data.getPrice());
+            Picasso.with(context).load(data.getImage()).into(holder.cart_item_image);
+            holder.cart_number_button.setNumber(data.getQuantity());
+        }
+
+        @Override
+        public int getItemCount() {
+            return listCart.size();
+        }
+
+
+        public class MyHolder extends RecyclerView.ViewHolder{
+            TextView cart_item_name, cart_item_price;
+            ImageView cart_item_image;
+            ElegantNumberButton cart_number_button;
+            Button remove_cart;
+
+            public MyHolder(View itemView) {
+                super(itemView);
+                cart_item_name = (TextView) itemView.findViewById(R.id.cart_item_name);
+                cart_item_price = (TextView) itemView.findViewById(R.id.cart_item_price);
+                cart_item_image = (ImageView) itemView.findViewById(R.id.cart_image);
+                cart_number_button = (ElegantNumberButton) itemView.findViewById(R.id.enb_cart_add_subtract);
+                remove_cart = (Button) itemView.findViewById(R.id.remove_cart_item);
+                remove_cart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        removeCart(cartItemKey);
+                    }
+                });
+            }
+        }
+    }
 }
+
+
+

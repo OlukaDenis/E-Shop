@@ -257,6 +257,7 @@ public class CartDetail extends AppCompatActivity {
             }
         });
 
+
     }
 
     @Override
@@ -307,19 +308,28 @@ public class CartDetail extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(RecyclerViewAdapter.MyHolder holder, int position) {
+        public void onBindViewHolder(RecyclerViewAdapter.MyHolder holder, final int position) {
             Cart data = listCart.get(position);
             holder.cart_item_name.setText(data.getName());
             holder.cart_item_price.setText(data.getPrice());
             Picasso.with(context).load(data.getImage()).into(holder.cart_item_image);
             holder.cart_number_button.setNumber(data.getQuantity());
+            holder.remove_cart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeCart(cartItemKey);//removing the item frome the database
+                    listCart.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, listCart.size());
+                    notifyDataSetChanged();
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
             return listCart.size();
         }
-
 
         public class MyHolder extends RecyclerView.ViewHolder{
             TextView cart_item_name, cart_item_price;
@@ -334,13 +344,8 @@ public class CartDetail extends AppCompatActivity {
                 cart_item_image = (ImageView) itemView.findViewById(R.id.cart_image);
                 cart_number_button = (ElegantNumberButton) itemView.findViewById(R.id.enb_cart_add_subtract);
                 remove_cart = (Button) itemView.findViewById(R.id.remove_cart_item);
-                remove_cart.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        removeCart(cartItemKey);
-                    }
-                });
             }
+
         }
     }
 }

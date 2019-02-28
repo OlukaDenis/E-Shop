@@ -53,10 +53,8 @@ public class OrderStatus extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         orderRecylerView.setLayoutManager(layoutManager);
 
-        if(getIntent() == null)
-            loadOrderStatus(Common.user_Current.getPhone());
-        else
-            loadOrderStatus(getIntent().getStringExtra("userPhone"));
+        loadOrderStatus(Common.user_Current.getPhone());
+
     }
 
     private void loadOrderStatus(final String phone) {

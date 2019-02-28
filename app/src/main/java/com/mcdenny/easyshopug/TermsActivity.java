@@ -24,9 +24,7 @@ public class TermsActivity extends AppCompatActivity {
                 .build());
         setContentView(R.layout.activity_terms);
         // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
     }
 }

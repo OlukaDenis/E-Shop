@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mcdenny.easyshopug.Common.Common;
 import com.mcdenny.easyshopug.Model.User;
+import com.mcdenny.easyshopug.Utils.Util;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import dmax.dialog.SpotsDialog;
@@ -34,6 +40,9 @@ public class LoginActivity extends AppCompatActivity {
     LinearLayout login_layout;
     DatabaseReference user_table;
     FirebaseDatabase database;
+    FirebaseAuth mAuth;
+    private String currentUserEmail;
+    private static final String TAG = SignupActivity.class.getSimpleName();
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -60,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         //initializing firebase database
          database = FirebaseDatabase.getInstance();
          user_table = database.getReference("User");
+         mAuth = FirebaseAuth.getInstance();
 
         create.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +90,8 @@ public class LoginActivity extends AppCompatActivity {
                final AlertDialog waitingDialog = new SpotsDialog(LoginActivity.this);
                //Check for network connection
                if (Common.isNetworkAvailable(getBaseContext())){
+                   final String pass = password.getText().toString();
+                   final boolean valid_pass = Util.isValidPassword(pass);
                    //Save user and password
                    Paper.book().write(Common.USER_KEY, username.getText().toString());
                    Paper.book().write(Common.PASSWORD_KEY, password.getText().toString());
@@ -92,14 +104,19 @@ public class LoginActivity extends AppCompatActivity {
                        password.setError("You must fill in the password!");
                        password.requestFocus();
                    }
+                   else if(!valid_pass){
+                       password.setError("Wrong password");
+                   }
                    //If the textfields are not empty
                    else {
+                       final String mPass = password.getText().toString();
                        //setting a dialog to tell the user to wait
                        waitingDialog.show();
-                       user_table.addValueEventListener(new ValueEventListener() {
+                       user_table.addListenerForSingleValueEvent(new ValueEventListener() {
                            @Override
                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                               //Getting the user's email from the firebase database
+                                currentUserEmail = dataSnapshot.child(username.getText().toString()).child("email").getValue().toString();
                                //checking if the user exists in the database
                                if (dataSnapshot.child(username.getText().toString()).exists()) {
                                    //getting the users information
@@ -110,6 +127,22 @@ public class LoginActivity extends AppCompatActivity {
                                        Common.user_Current = user;//the user details are stored in user_current variable
                                        startActivity(intent);
                                        waitingDialog.dismiss();
+
+                                       //signing the user to the firebase authentication
+                                       mAuth.signInWithEmailAndPassword(currentUserEmail, mPass)
+                                               .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                                   @Override
+                                                   public void onComplete(@NonNull Task<AuthResult> task) {
+                                                       if(task.isSuccessful()){
+                                                           Log.v(TAG, "Successfully logged in");
+                                                       }
+                                                       else {
+                                                           String message = task.getException().getMessage();
+                                                           Log.e(TAG, message);
+                                                       }
+                                                   }
+                                               });
+
                                        finish();//stops the login activity
                                    } else {
                                        Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
@@ -128,6 +161,7 @@ public class LoginActivity extends AppCompatActivity {
 
                            }
                        });
+
                    }//end of else if
                }
                else {

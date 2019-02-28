@@ -10,6 +10,7 @@
     <string name="action_share">Suggest to friends</string>
     <string name="phone_number">Phone number</string>
     <string name="name">Name</string>
+    <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="sign_up">REGISTER</string>
     <string name="addToCart">Add to cart</string>
@@ -29,6 +30,7 @@
     <string name="join">Or join with :</string>
     <string name="create">create account</string>
     <string name="forgot">Forgot Password ?</string>
+    <string name="reset_pass">Reset Password</string>
     <string name="skip">skip</string>
     <string name="guide">User\'s Guide</string>
     <string name="update">Check for Update</string>
@@ -60,4 +62,7 @@
     <string name="registered">2. Registered</string>
     <string name="registered_one"><b>2.1</b> Users must be at least 18 years of age have the legal capacity of the corresponding rights and capacity of natural persons, legal persons or other organizations, independently bear legal responsibility</string>
     <string name="registered_two"><b>2.2</b> Users should be honestly to EASY SHOP registration information, the user agree to provide the registered information is true, accurate, complete, legal and effective, and of any change of user registration information, should be timely update the registered information.</string>
+    <string name="forgot_desc">Enter your email address and we will send you a link to reset your password.</string>
+    <string name="reset">Reset your password</string>
+    <string name="send_email">Send email</string>
 </resources>

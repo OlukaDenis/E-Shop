@@ -31,7 +31,7 @@
             android:textColorHint="@android:color/white"
             android:textSize="20sp"
             app:met_floatingLabel="highlight"
-            app:met_floatingLabelTextSize="8dp"
+            app:met_floatingLabelTextSize="14dp"
             app:met_iconPadding="0dp"
             app:met_primaryColor="#2196F3"
             app:met_singleLineEllipsis="true"
@@ -53,7 +53,7 @@
             android:textColorHint="@android:color/white"
             android:textSize="20sp"
             app:met_floatingLabel="highlight"
-            app:met_floatingLabelTextSize="8dp"
+            app:met_floatingLabelTextSize="14dp"
             app:met_iconPadding="0dp"
             app:met_primaryColor="#2196F3"
             app:met_singleLineEllipsis="true"
@@ -75,7 +75,7 @@
             android:textColorHint="@android:color/white"
             android:textSize="20sp"
             app:met_floatingLabel="highlight"
-            app:met_floatingLabelTextSize="8dp"
+            app:met_floatingLabelTextSize="14dp"
             app:met_iconPadding="0dp"
             app:met_primaryColor="#2196F3"
             app:met_singleLineEllipsis="true"
@@ -95,7 +95,7 @@
             android:background="#42A5F5"
             android:text="@string/done"
             android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
 </ScrollView>

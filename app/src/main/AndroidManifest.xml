@@ -67,10 +67,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mcdenny.easyshopug.HomeActivity" />
         </activity>
-        <activity android:name=".ForgotPasswordActivity" />
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:label="@string/reset_pass">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mcdenny.easyshopug.LoginActivity" />
+        </activity>
         <activity
             android:name=".TermsActivity"
-            android:label="@string/terms" />
+            android:label="@string/terms" >
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.mcdenny.easyshopug.SignupActivity" />
+        </activity>
         <activity
             android:name=".AboutUs"
             android:label="About Us"

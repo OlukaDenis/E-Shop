@@ -9,11 +9,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mcdenny.easyshopug.Common.Common;
 import com.mcdenny.easyshopug.Model.User;
+import com.mcdenny.easyshopug.Utils.Util;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.security.Permissions;
@@ -31,11 +37,13 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SignupActivity extends AppCompatActivity {
-    MaterialEditText usrphone, usrname, usrpassword;
+    MaterialEditText usrphone, usrname, usrpassword, usremail;
     Button signup;
     TextView terms_service, login;
     DatabaseReference user_table;
     FirebaseDatabase database;
+    private FirebaseAuth mAuth;
+    private static final String TAG = SignupActivity.class.getSimpleName();
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -55,6 +63,7 @@ public class SignupActivity extends AppCompatActivity {
         usrphone = (MaterialEditText) findViewById(R.id.phone);
         usrname = (MaterialEditText) findViewById(R.id.name);
         usrpassword = (MaterialEditText) findViewById(R.id.password);
+        usremail = (MaterialEditText) findViewById(R.id.email);
         signup = (Button) findViewById(R.id.signup);
         terms_service = findViewById(R.id.terms_of_service);
         login = findViewById(R.id.Login_user);
@@ -66,6 +75,7 @@ public class SignupActivity extends AppCompatActivity {
         //initializing firebase database
          database = FirebaseDatabase.getInstance();
          user_table = database.getReference("User");
+         mAuth = FirebaseAuth.getInstance();
 
         terms_service.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +96,10 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (Common.isNetworkAvailable(getBaseContext())){
                     //checking whether the edit text is empty
+                    final String pass = usrpassword.getText().toString();
+                    final String email = usremail.getText().toString();
+                    final boolean valid_pass = Util.isValidPassword(pass);
+                    final boolean valid_email = Util.isValidEmail(email);
                     if(usrphone.getText().toString().isEmpty()) {
                         usrphone.setError("Invalid Phone number");
                         usrphone.requestFocus();
@@ -95,14 +109,25 @@ public class SignupActivity extends AppCompatActivity {
                         usrname.requestFocus();
                     }
                     else if(usrpassword.getText().toString().isEmpty()){
-                        usrpassword.setError("Invalid Password");
+                        usrpassword.setError("Please enter password");
                         usrpassword.requestFocus();
+                    }
+                    else if(usremail.getText().toString().isEmpty()){
+                        usremail.setError("Invalid email");
+                        usremail.requestFocus();
+                    }
+                    else if(!valid_pass){
+                        usrpassword.setError("Password is too short(At least 6 characters)");
+                    }
+                    else if(!valid_email){
+                        usremail.setError("Invalid email format");
                     }
                     else {
                         final AlertDialog waitingDialog = new SpotsDialog(SignupActivity.this);
                         waitingDialog.show();
 
-                        user_table.addValueEventListener(new ValueEventListener() {
+                        //Creating a user in firebase database
+                        user_table.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 //check if the user exists
@@ -114,7 +139,7 @@ public class SignupActivity extends AppCompatActivity {
                                 //if user does not exist, creates new
                                 else {
                                     waitingDialog.dismiss();
-                                    User user = new User(usrname.getText().toString(), usrpassword.getText().toString());
+                                    User user = new User(usrname.getText().toString(), usrpassword.getText().toString(), usremail.getText().toString());
                                     user_table.child(usrphone.getText().toString()).setValue(user);
                                     Toast.makeText(SignupActivity.this, "Succesfully registered!", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
@@ -129,6 +154,23 @@ public class SignupActivity extends AppCompatActivity {
 
                             }
                         });
+
+                        //Creating a user in firebase authentication
+                        mAuth.createUserWithEmailAndPassword(email, pass)
+                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if(task.isSuccessful()){
+                                            Log.v(TAG, "User authenticated successfully");
+                                           // Toast.makeText(SignupActivity.this, "Sucess", Toast.LENGTH_SHORT).show();
+                                        }
+                                        else {
+                                            String message = task.getException().getMessage();
+                                            Log.e(TAG, message);
+                                            //Toast.makeText(SignupActivity.this, message, Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
                     }//end of else
                 }
                 else {

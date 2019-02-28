@@ -32,7 +32,7 @@
         android:layout_marginStart="10dp"
         android:padding="10dp"
         android:text="@string/about_info"
-        android:textSize="15sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -45,5 +45,5 @@
         android:gravity="center"
         android:padding="10dp"
         android:text="@string/copy_right"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 </LinearLayout>

@@ -21,9 +21,9 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         itemView.setOnClickListener(this);
     }
 
-    public void setItemClickListener(ItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
-    }
+   // public void setItemClickListener(ItemClickListener itemClickListener) {
+     //   this.itemClickListener = itemClickListener;
+   // }
 
     @Override
     public void onClick(View view) {

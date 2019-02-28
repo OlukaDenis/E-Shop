@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Util {
     private String XreferenceId = "c72025f5-5cd1-5530-99e4-8ba4722fad46";
@@ -92,5 +94,30 @@ public class Util {
 
     public static String getDateTime() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date().getTime());
+    }
+
+    /**
+     * Validating email
+     * @param email The user's email
+     * @return True if the email matches the pattern
+     */
+    public static boolean isValidEmail(String email){
+        String email_pattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        Pattern pattern = Pattern.compile(email_pattern);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    /**
+     * Validating password
+     * @param pass  password entered by the user
+     * @return False when the password length is short and
+     * returns true when the passwor is long
+     */
+    public static boolean isValidPassword(String pass){
+        if(pass!=null && pass.length()>6){
+            return true;
+        }
+        return false;
     }
 }

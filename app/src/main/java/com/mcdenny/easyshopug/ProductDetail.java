@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,12 +25,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.mcdenny.easyshopug.Common.Common;
 import com.mcdenny.easyshopug.Model.Cart;
 import com.mcdenny.easyshopug.Model.Product;
+import com.mcdenny.easyshopug.Utils.Cons;
+import com.mcdenny.easyshopug.Utils.Util;
 import com.squareup.picasso.Picasso;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -62,7 +61,7 @@ public class ProductDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //set the fonts
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/QuicksandLight.ttf")
+                .setDefaultFontPath("fonts/MontserratRegular.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
         setContentView(R.layout.activity_product_detail);
@@ -147,17 +146,18 @@ public class ProductDetail extends AppCompatActivity {
                 prdName.setText(finalProduct.getName());
                 prdDescription.setText("Description: \n"+finalProduct.getDescription());
 
-                Locale locale = new Locale("en", "UG");
-                NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+                //Locale locale = new Locale("en", "UG");
+                //NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
                 int thePrice = (Integer.parseInt(finalProduct.getPrice()));
-                prdPrice.setText(numberFormat.format(thePrice));
+                prdPrice.setText(Cons.Vals.CURRENCY + Util.formatNumber(String.valueOf(thePrice)));
                 mQty = finalProduct.getPrice();
 
                 //to be sent to the cart
                 cNm = finalProduct.getName();
                 cImg = finalProduct.getImage();
                 cDesc = "Description: \n"+finalProduct.getDescription();
-                cPrice = numberFormat.format(thePrice);
+                //cPrice = numberFormat.format(thePrice);
+                cPrice = String.valueOf(thePrice);
                 cDisc = "Discount: "+finalProduct.getDiscount()+"%";
 
                 prdDiscount.setText("Discount: "+finalProduct.getDiscount()+"%");

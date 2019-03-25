@@ -1,7 +1,6 @@
 package com.mcdenny.easyshopug;
 
 import android.content.Context;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -19,7 +18,7 @@ public class TermsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //set the fonts
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/QuicksandLight.ttf")
+                .setDefaultFontPath("fonts/MontserratRegular.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
         setContentView(R.layout.activity_terms);

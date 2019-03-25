@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Quick Duuka</string>
+    <string name="app_name">Easy Shop</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -38,13 +38,13 @@
     <string name="category">Category</string>
     <string name="destination">Destination</string>
     <string name="order">Order total</string>
-    <string name="confirm">confirm and pay</string>
+    <string name="confirm"> submit order</string>
     <string name="checkout">check out</string>
     <string name="total">Total :</string>
     <string name="about">About Us</string>
     <string name="invite">Invite a Friend</string>
     <string name="area">Area</string>
-    <string name="done">done</string>
+    <string name="address_continue">Proceed to payment</string>
     <string name="district">District</string>
     <string name="division">Division</string>
     <string name="county">Sub-county</string>
@@ -65,4 +65,8 @@
     <string name="forgot_desc">Enter your email address and we will send you a link to reset your password.</string>
     <string name="reset">Reset your password</string>
     <string name="send_email">Send email</string>
+
+    <string name="shipping_delivery">Standard shipping</string>
+    <string name="pickup_delivery">Pickup fom the shop</string>
+
 </resources>

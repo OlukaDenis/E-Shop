@@ -28,11 +28,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.mcdenny.easyshopug.Model.Category;
 import com.mcdenny.easyshopug.Model.Distributor;
-import com.mcdenny.easyshopug.Model.Product;
 import com.mcdenny.easyshopug.ViewHolder.DistributorViewHolder;
-import com.mcdenny.easyshopug.ViewHolder.ProductViewHolder;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
 
@@ -69,7 +66,7 @@ public class DistributorList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //set the fonts
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/QuicksandLight.ttf")
+                .setDefaultFontPath("fonts/MontserratRegular.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
         setContentView(R.layout.activity_distributor_list);

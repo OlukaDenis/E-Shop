@@ -14,6 +14,8 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon">
+        <activity android:name=".PaymentMethodActivity"></activity>
+        <activity android:name=".DeliveryMethodActivity" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/WithNoActionBar">
@@ -76,10 +78,10 @@
         </activity>
         <activity
             android:name=".TermsActivity"
-            android:label="@string/terms" >
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.mcdenny.easyshopug.SignupActivity" />
+            android:label="@string/terms">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mcdenny.easyshopug.SignupActivity" />
         </activity>
         <activity
             android:name=".AboutUs"
@@ -90,8 +92,8 @@
                 android:value="com.mcdenny.easyshopug.HomeActivity" />
         </activity>
         <activity
-            android:name=".CheckoutActivity"
-            android:label="Check out">
+            android:name=".SummaryActivity"
+            android:label="Order Summary">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mcdenny.easyshopug.ShippingAddress" />
@@ -106,14 +108,14 @@
         </activity>
         <activity
             android:name=".ShippingAddress"
-            android:label="Addresses" />
+            android:label="Your Address" />
 
         <service
             android:name=".Service.ListenOrder"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".FavoritesActivity"></activity>
+        <activity android:name=".FavoritesActivity" />
     </application>
 
 </manifest>

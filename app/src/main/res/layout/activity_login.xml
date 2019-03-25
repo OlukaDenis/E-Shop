@@ -65,20 +65,17 @@
                         android:layout_marginRight="5dp"
                         android:layout_marginEnd="5dp"
                         android:inputType="phone"
-                        android:textColorHint="@color/colorAccent"
+                        android:textColorHint="@android:color/darker_gray"
                         android:textSize="18sp"
-                        app:met_baseColor="@color/colorPrimaryDark"
                         app:met_clearButton="true"
                         android:layout_marginTop="5dp"
                         app:met_floatingLabel="highlight"
                         app:met_floatingLabelTextSize="14dp"
-                        android:textColor="@android:color/black"
                         app:met_iconLeft="@drawable/ic_phone"
                         app:met_iconPadding="0dp"
                         app:met_maxCharacters="10"
                         app:met_primaryColor="@color/colorPrimaryDark"
-                        app:met_singleLineEllipsis="true"
-                        app:met_textColorHint="@color/grey_500" />
+                        app:met_singleLineEllipsis="true" />
 
 
                     <com.rengwuxian.materialedittext.MaterialEditText
@@ -89,23 +86,20 @@
                         android:focusableInTouchMode="true"
                         android:hint="@string/password"
                         android:inputType="textPassword"
-                        android:textColorHint="@color/colorAccent"
-                        android:textColor="@android:color/black"
+                        android:textColorHint="@android:color/darker_gray"
                         android:layout_marginLeft="5dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_marginEnd="5dp"
                         android:textSize="20sp"
-                        app:met_baseColor="@color/colorPrimaryDark"
                         app:met_clearButton="true"
                         app:met_floatingLabel="highlight"
-                        app:met_floatingLabelTextSize="14dp"
+                        app:met_floatingLabelTextSize="14sp"
                         app:met_iconLeft="@drawable/ic_lock"
                         app:met_iconPadding="0dp"
-                        app:met_maxCharacters="8"
+                        app:met_maxCharacters="20"
                         app:met_primaryColor="@color/colorPrimaryDark"
-                        app:met_singleLineEllipsis="true"
-                        app:met_textColorHint="@color/grey_500" />
+                        app:met_singleLineEllipsis="true" />
 
                     <Button
                         android:id="@+id/login"

@@ -4,43 +4,33 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.mcdenny.easyshopug.Common.Common;
 import com.mcdenny.easyshopug.Model.Cart;
+import com.mcdenny.easyshopug.Utils.Cons;
+import com.mcdenny.easyshopug.Utils.Util;
 import com.mcdenny.easyshopug.ViewHolder.CartDetailViewHolder;
 import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import dmax.dialog.SpotsDialog;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -53,7 +43,7 @@ public class CartDetail extends AppCompatActivity {
     ImageView noCartImg;
     LinearLayout checkoutLayout;
     Button placeOrder;
-    public int total;//cart total
+    public int total = 0;//cart total
     List<Cart> list = new ArrayList<>();
     HashMap<String, List<Cart>> cartItemMap;
 
@@ -77,12 +67,13 @@ public class CartDetail extends AppCompatActivity {
     public static final String CURRENT_USER_NAME = "CURRENT_USER_NAME";
     public static final String ITEMS_LIST = "ITEMS_LIST";
 
-    private String mCustomerAddress;
-    private String mCustomerCity;
-    private String mCustomerRegion;
-    //CartAdapter adapter;
-    //FirebaseRecyclerAdapter<Cart, CartDetailViewHolder> adapter;
-    android.app.AlertDialog waitingDialog;
+    private String mCustomerArea;
+    private String mCustomerPlace;
+
+    private ProgressDialog progressDialog;
+    public android.app.AlertDialog waitingDialog;
+
+    FirebaseRecyclerAdapter<Cart, CartDetailViewHolder> cartAdapter;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -94,13 +85,16 @@ public class CartDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //set the fonts
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/QuicksandRegular.ttf")
+                .setDefaultFontPath("fonts/MontserratRegular.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
         setContentView(R.layout.activity_cart);
         setTitle("Your Cart");
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+
+        progressDialog = new ProgressDialog(this);
+        waitingDialog = new SpotsDialog(this);
 
         cartItemMap = new HashMap<>();
         totalPrice = findViewById(R.id.total);
@@ -122,8 +116,7 @@ public class CartDetail extends AppCompatActivity {
         //initialise firebase
         database = FirebaseDatabase.getInstance();
         orders = database.getReference("Requests");
-        cart = database.getReference("Cart");
-        //cartKey = cart.getKey();
+        cart = database.getReference("Cart").child(Common.user_Current.getPhone());
 
         currentUserPhone = Common.user_Current.getPhone();
         currentUserName = Common.user_Current.getName();
@@ -137,6 +130,67 @@ public class CartDetail extends AppCompatActivity {
         loadCartDetails();
     }
 
+    private void loadCartDetails() {
+        progressDialog.setTitle("Please wait");
+        progressDialog.setMessage("Loading cart....");
+        progressDialog.show();
+        cartAdapter = new FirebaseRecyclerAdapter<Cart, CartDetailViewHolder>(
+                Cart.class,
+                R.layout.cart_layout,
+                CartDetailViewHolder.class,
+                cart
+        ) {
+            @Override
+            protected void populateViewHolder(CartDetailViewHolder viewHolder, Cart model, int position) {
+
+                progressDialog.setCancelable(false);
+                list.add(model);
+                //sending the cart items to the common activity
+                Common.Current_cart_list = list;
+
+                final String price = model.getPrice();
+                final String qty = model.getQuantity();
+                viewHolder.cart_item_name.setText(model.getName());
+                viewHolder.cart_item_price.setText(Cons.Vals.CURRENCY + Util.formatNumber(price));
+                viewHolder.cart_number_button.setNumber(qty);
+                Picasso.with(getBaseContext()).load(model.getImage())
+                        .into(viewHolder.cart_item_image);
+
+                final int itemPrice = Integer.parseInt(price);
+                final int itemQty = Integer.parseInt(qty);
+
+                total += itemPrice * itemQty;
+                totalPrice.setText(Cons.Vals.CURRENCY + Util.formatNumber(String.valueOf(total)));
+                Common.cart_item_total = total; // send the total to the common activity
+
+                hideEmptyCart();
+                progressDialog.dismiss();
+
+                final String refKey = cartAdapter.getRef(position).getKey();
+                viewHolder.remove_cart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteCart(refKey);
+                        total += itemPrice * itemQty;
+                    }
+                });
+            }
+        };
+
+        cartAdapter.notifyDataSetChanged();
+        recyclerView.setAdapter(cartAdapter);
+    }
+
+    private  void deleteCart(String key){
+        progressDialog.setTitle("Please wait");
+        progressDialog.setMessage("Deleting item....");
+        progressDialog.show();
+        cart.child(key).removeValue();
+        cartAdapter.notifyDataSetChanged();
+        loadCartDetails();
+        progressDialog.dismiss();
+    }
+
     private void pickAddress() {
 
         Intent intent = new Intent(this, ShippingAddress.class);
@@ -148,9 +202,8 @@ public class CartDetail extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_ADDRESS && resultCode == RESULT_OK) {
 
-            mCustomerAddress = data.getStringExtra("customerAddress");
-            mCustomerCity = data.getStringExtra("customerCity");
-            mCustomerRegion = data.getStringExtra("customerRegion");
+            mCustomerArea = data.getStringExtra("customerArea");
+            mCustomerPlace = data.getStringExtra("customerPlace");
             viewAlertDialog();
         } else {
             Toast.makeText(this, "No Customer address found!", Toast.LENGTH_SHORT).show();
@@ -160,25 +213,22 @@ public class CartDetail extends AppCompatActivity {
     //method that is called when place order button is clicked
     private void viewAlertDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(CartDetail.this);
-        alertDialog.setTitle("Confirm your details");
+        alertDialog.setTitle("Confirm your Address");
         alertDialog.setMessage("Name: " + currentUserName +
                 "\nContact: " + currentUserPhone +
-                "\nAddress: " + mCustomerRegion + "," + mCustomerCity + "," + mCustomerAddress);
+                "\nAddress: " + mCustomerArea + "," + mCustomerPlace );
 
 
-        alertDialog.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("PROCEED TO DELIVERY", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 final android.app.AlertDialog waitingDialog = new SpotsDialog(CartDetail.this);
                 waitingDialog.show();
-                Intent intent = new Intent(CartDetail.this, CheckoutActivity.class);
-                intent.putExtra(CartDetail.CURRENT_USER_NAME, currentUserName);
-                intent.putExtra(CartDetail.CURRENT_USER_PHONE, currentUserPhone);
-                intent.putExtra(CartDetail.CUSTOMER_ADDRESS, mCustomerAddress);
-                intent.putExtra(CartDetail.CUSTOMER_CITY, mCustomerCity);
-                intent.putExtra(CartDetail.CUSTOMER_REGION, mCustomerRegion);
+                Intent intent = new Intent(CartDetail.this, DeliveryMethodActivity.class);
+                /*
                 intent.putExtra(CartDetail.ITEMS_LIST, (Serializable) list);
                 intent.putExtra(CartDetail.TOTAL_AMOUNT, total);
+                */
                 startActivity(intent);
                 finish();
             }
@@ -193,78 +243,31 @@ public class CartDetail extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void loadCartDetails() {
-        waitingDialog = new SpotsDialog(CartDetail.this);
-        waitingDialog.show();
-        cart.child(Common.user_Current.getPhone()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                total = 0;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Cart mCartItem = snapshot.getValue(Cart.class);
-                    Cart listCart = new Cart();
-                    //cartItemMap.put(dataSnapshot.getKey(), mCartItem);
-                    listCart.setName(mCartItem.getName());
-                    listCart.setPrice(mCartItem.getPrice());
-                    listCart.setImage(mCartItem.getImage());
-                    listCart.setQuantity(mCartItem.getQuantity());
-                    list.add(listCart);
-                    cartItemMap.put(snapshot.getKey(), list);
 
-                    //calculating the total price
-                    total += (Integer.parseInt(mCartItem.getPrice())) * (Integer.parseInt(mCartItem.getQuantity()));
-                    Locale locale = new Locale("en", "UG");
-                    NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
-                    String totals = String.valueOf(total);
-                    totalPrice.setText(numberFormat.format(total));
-                    //default view when the cart is empty
-                    checkoutLayout.setVisibility(View.VISIBLE);
-                    noCart.setVisibility(View.GONE);
-                    noCartImg.setVisibility(View.GONE);
-                    cartItemKey = snapshot.getKey();
-                    RecyclerViewAdapter recycler = new RecyclerViewAdapter(getApplicationContext(), list);
-                    recyclerView.setAdapter(recycler);
-                    //recycler.notifyDataSetChanged();
-                }
-                waitingDialog.dismiss();
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                //waitingDialog.dismiss();
-            }
-        });
+    //To hide empty cart
+    private void hideEmptyCart(){
+        //default view when the cart is empty
+        checkoutLayout.setVisibility(View.VISIBLE);
+        noCart.setVisibility(View.GONE);
+        noCartImg.setVisibility(View.GONE);
     }
 
-    //remove from cart
-    private void removeCart(final String key) {
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Removing Product from Cart...");
-
-        progressDialog.show();
-        cart.child(Common.user_Current.getPhone()).child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(CartDetail.this, "Removed item from cart.", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                }
-                else {
-                    progressDialog.dismiss();
-                    Toast.makeText(CartDetail.this, "Failed to remove from cart.", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-
-
+    //To unhide empty cart
+    private void unhideEmptyCart(){
+        //default view when the cart is empty
+        checkoutLayout.setVisibility(View.INVISIBLE);
+        noCart.setVisibility(View.VISIBLE);
+        noCartImg.setVisibility(View.VISIBLE);
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_cart, menu);
-        return true;
+        return false;
     }
 
     @Override
@@ -289,65 +292,6 @@ public class CartDetail extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyHolder>{
-        private Context context;
-        private List<Cart> listCart;
-
-
-        public RecyclerViewAdapter(Context context, List<Cart> listCart) {
-            this.listCart = listCart;
-            this.context = context;
-        }
-
-        @NonNull
-        @Override
-        public RecyclerViewAdapter.MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_layout,parent,false);
-            RecyclerViewAdapter.MyHolder myHolder = new RecyclerViewAdapter.MyHolder(view);
-            return myHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerViewAdapter.MyHolder holder, final int position) {
-            Cart data = listCart.get(position);
-            holder.cart_item_name.setText(data.getName());
-            holder.cart_item_price.setText(data.getPrice());
-            Picasso.with(context).load(data.getImage()).into(holder.cart_item_image);
-            holder.cart_number_button.setNumber(data.getQuantity());
-            holder.remove_cart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeCart(cartItemKey);//removing the item frome the database
-                    listCart.remove(position);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, listCart.size());
-                    notifyDataSetChanged();
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return listCart.size();
-        }
-
-        public class MyHolder extends RecyclerView.ViewHolder{
-            TextView cart_item_name, cart_item_price;
-            ImageView cart_item_image;
-            ElegantNumberButton cart_number_button;
-            Button remove_cart;
-
-            public MyHolder(View itemView) {
-                super(itemView);
-                cart_item_name = (TextView) itemView.findViewById(R.id.cart_item_name);
-                cart_item_price = (TextView) itemView.findViewById(R.id.cart_item_price);
-                cart_item_image = (ImageView) itemView.findViewById(R.id.cart_image);
-                cart_number_button = (ElegantNumberButton) itemView.findViewById(R.id.enb_cart_add_subtract);
-                remove_cart = (Button) itemView.findViewById(R.id.remove_cart_item);
-            }
-
-        }
-    }
 }
 
 

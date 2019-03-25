@@ -1,7 +1,6 @@
 package com.mcdenny.easyshopug;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -29,10 +28,7 @@ import com.mcdenny.easyshopug.Model.User;
 import com.mcdenny.easyshopug.Utils.Util;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-import java.security.Permissions;
-
 import dmax.dialog.SpotsDialog;
-import mehdi.sakout.fancybuttons.FancyButton;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -55,7 +51,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //set the fonts
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/QuicksandLight.ttf")
+                .setDefaultFontPath("fonts/MontserratRegular.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
         setContentView(R.layout.activity_signup);

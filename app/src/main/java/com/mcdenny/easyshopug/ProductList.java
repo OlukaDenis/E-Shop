@@ -1,21 +1,26 @@
 package com.mcdenny.easyshopug;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +34,8 @@ import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mcdenny.easyshopug.Common.Common;
 import com.mcdenny.easyshopug.Interface.ItemClickListener;
 import com.mcdenny.easyshopug.Model.Product;
+import com.mcdenny.easyshopug.Utils.Cons;
+import com.mcdenny.easyshopug.Utils.Util;
 import com.mcdenny.easyshopug.ViewHolder.ProductViewHolder;
 import com.squareup.picasso.Picasso;
 
@@ -65,11 +72,13 @@ public class ProductList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //set the fonts
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/QuicksandLight.ttf")
+                .setDefaultFontPath("fonts/MontserratRegular.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_list);
+        //customize font
+        //changeToolbarFont(findViewById(R.id.app_bar_layout), this);
 
         //firebase init
         database = FirebaseDatabase.getInstance();
@@ -217,10 +226,11 @@ public class ProductList extends AppCompatActivity {
             @Override
             protected void populateViewHolder(final ProductViewHolder viewHolder, final Product model, final int position) {
                 viewHolder.productItemName.setText(model.getName());
+
                 Locale locale = new Locale("en", "UG");
                 NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
                 int thePrice = (Integer.parseInt(model.getPrice()));
-                viewHolder.productItemPrice.setText(numberFormat.format(thePrice));
+                viewHolder.productItemPrice.setText(Cons.Vals.CURRENCY + Util.formatNumber(String.valueOf(thePrice)));
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(viewHolder.productItemImage);
 
@@ -343,5 +353,23 @@ public class ProductList extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //customize toolbar font
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public static void changeToolbarFont(Toolbar toolbar, Activity context){
+        for (int i = 0; i <toolbar.getChildCount(); i++){
+            View view = toolbar.getChildAt(i);
+            if (view instanceof TextView){
+                TextView tv = (TextView) view;
+                if(tv.getText().equals(toolbar.getTitle())){
+                   applyFont(tv, context);
+                }
+            }
+        }
+    }
+
+    private static void applyFont(TextView tv, Activity context) {
+        tv.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/montserratRegular"));
     }
 }

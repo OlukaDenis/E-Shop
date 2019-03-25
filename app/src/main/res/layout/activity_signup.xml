@@ -69,17 +69,15 @@
                         android:focusableInTouchMode="true"
                         android:hint="@string/phone_number"
                         android:inputType="phone"
-                        android:textColorHint="@color/colorAccent"
+                        android:textColorHint="@android:color/darker_gray"
                         android:textSize="18sp"
-                        app:met_baseColor="@color/colorPrimaryDark"
                         app:met_floatingLabel="highlight"
                         app:met_floatingLabelTextSize="10dp"
                         app:met_iconLeft="@drawable/ic_phone"
                         app:met_iconPadding="0dp"
                         app:met_maxCharacters="10"
                         app:met_primaryColor="@color/colorPrimaryDark"
-                        app:met_singleLineEllipsis="true"
-                        app:met_textColorHint="@color/grey_500" />
+                        app:met_singleLineEllipsis="true" />
 
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/name"
@@ -93,17 +91,15 @@
                         android:focusableInTouchMode="true"
                         android:hint="@string/name"
                         android:inputType="textCapWords"
-                        android:textColorHint="@color/colorAccent"
+                        android:textColorHint="@android:color/darker_gray"
                         android:textSize="18sp"
-                        app:met_baseColor="@color/colorPrimaryDark"
                         app:met_floatingLabel="highlight"
                         app:met_floatingLabelTextSize="14sp"
                         app:met_iconLeft="@drawable/ic_person"
                         app:met_iconPadding="0dp"
                         app:met_maxCharacters="50"
                         app:met_primaryColor="@color/colorPrimaryDark"
-                        app:met_singleLineEllipsis="true"
-                        app:met_textColorHint="@color/grey_500" />
+                        app:met_singleLineEllipsis="true" />
 
 
                     <com.rengwuxian.materialedittext.MaterialEditText
@@ -118,17 +114,15 @@
                         android:focusableInTouchMode="true"
                         android:hint="@string/password"
                         android:inputType="textPassword"
-                        android:textColorHint="@color/colorAccent"
+                        android:textColorHint="@android:color/darker_gray"
                         android:textSize="18sp"
-                        app:met_baseColor="@color/colorPrimaryDark"
                         app:met_floatingLabel="highlight"
                         app:met_floatingLabelTextSize="14sp"
                         app:met_iconLeft="@drawable/ic_lock"
                         app:met_iconPadding="0dp"
                         app:met_maxCharacters="50"
                         app:met_primaryColor="@color/colorPrimaryDark"
-                        app:met_singleLineEllipsis="true"
-                        app:met_textColorHint="@color/grey_500" />
+                        app:met_singleLineEllipsis="true" />
 
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/email"
@@ -142,9 +136,8 @@
                         android:focusableInTouchMode="true"
                         android:hint="@string/email"
                         android:inputType="textEmailAddress"
-                        android:textColorHint="@color/colorAccent"
+                        android:textColorHint="@android:color/darker_gray"
                         android:textSize="18sp"
-                        app:met_baseColor="@color/colorPrimaryDark"
                         app:met_floatingLabel="highlight"
                         app:met_floatingLabelTextSize="14sp"
                         app:met_iconLeft="@drawable/ic_mail"
@@ -193,7 +186,7 @@
                     android:layout_toRightOf="@id/already_have_account_text"
                     android:padding="5dp"
                     android:text="@string/login"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp" />
 
 

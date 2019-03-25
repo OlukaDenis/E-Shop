@@ -1,63 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ShippingAddress">
+    android:orientation="vertical"
+    tools:context=".ShippingAddress"
+    android:weightSum="10">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_weight="9">
 
-
-
-
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/address_region"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="3dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:hint="Region e.g. central"
-            android:inputType="textCapWords"
-            android:textColorHint="@android:color/white"
-            android:textSize="20sp"
-            app:met_floatingLabel="highlight"
-            app:met_floatingLabelTextSize="14dp"
-            app:met_iconPadding="0dp"
-            app:met_primaryColor="#2196F3"
-            app:met_singleLineEllipsis="true"
-            app:met_textColorHint="#757575" />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/address_city"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="3dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:hint="City"
-            android:inputType="textCapWords"
-            android:textColorHint="@android:color/white"
-            android:textSize="20sp"
-            app:met_floatingLabel="highlight"
-            app:met_floatingLabelTextSize="14dp"
-            app:met_iconPadding="0dp"
-            app:met_primaryColor="#2196F3"
-            app:met_singleLineEllipsis="true"
-            app:met_textColorHint="#757575" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/address_area"
@@ -70,32 +31,70 @@
             android:layout_marginTop="3dp"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:hint="Address"
+            android:hint="Area"
             android:inputType="textCapWords"
-            android:textColorHint="@android:color/white"
             android:textSize="20sp"
             app:met_floatingLabel="highlight"
             app:met_floatingLabelTextSize="14dp"
             app:met_iconPadding="0dp"
-            app:met_primaryColor="#2196F3"
+            app:met_primaryColor="@color/colorPrimary"
             app:met_singleLineEllipsis="true"
-            app:met_textColorHint="#757575" />
+            app:met_textColorHint="@android:color/darker_gray" />
 
-
-
-        <Button
-            android:id="@+id/done"
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/address_place"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="40dp"
-            android:background="#42A5F5"
-            android:text="@string/done"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            android:layout_marginTop="3dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="Place of residence"
+            android:inputType="textCapWords"
+            android:textSize="20sp"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelTextSize="14dp"
+            app:met_iconPadding="0dp"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="true"
+            app:met_textColorHint="@android:color/darker_gray" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/address_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="3dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="Phone"
+            android:inputType="textCapWords"
+            android:textSize="20sp"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelTextSize="14dp"
+            app:met_iconPadding="0dp"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="true"
+            app:met_textColorHint="@android:color/darker_gray" />
+
     </LinearLayout>
 
-</ScrollView>
+    <Button
+        android:id="@+id/btn_proceed"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textAllCaps="true"
+        android:padding="16sp"
+        android:text="Submit Address"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:background="@color/colorPrimary" />
+
+</LinearLayout>

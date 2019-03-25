@@ -4,33 +4,27 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.mcdenny.easyshopug.Model.Address;
+import com.mcdenny.easyshopug.Common.Common;
 
 import java.util.Timer;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import static java.lang.Boolean.getBoolean;
-
 public class ShippingAddress extends AppCompatActivity {
     private static Timer mTimer = new Timer();
     private static ProgressDialog dialog;
     DatabaseReference mDatabaseReference;
     FirebaseDatabase addreess_table;
-    EditText etAddress, etCity, etRegion;
-    String address, city, region;
+    EditText etArea, etPlace, etPhone;
+    String add_area, add_place, add_phone;
     Button address_done;
 
     
@@ -46,7 +40,7 @@ public class ShippingAddress extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //set the fonts
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/QuicksandLight.ttf")
+                .setDefaultFontPath("fonts/MontserratRegular.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
         setContentView(R.layout.activity_shipping_address);
@@ -56,10 +50,11 @@ public class ShippingAddress extends AppCompatActivity {
         // final ProgressDialog mDialog = new ProgressDialog(this);
         // dialog.setMessage("loading");
 
-        etAddress = findViewById(R.id.address_area);
-        etCity = findViewById(R.id.address_city);
-        etRegion = findViewById(R.id.address_region);
-        address_done = findViewById(R.id.done);
+        etArea = findViewById(R.id.address_area);
+        etPlace = findViewById(R.id.address_place);
+        etPhone = findViewById(R.id.address_phone);
+        address_done = (Button) findViewById(R.id.btn_proceed);
+        etPhone.setText(Common.user_Current.getPhone());
 
         //pointing to the root of database
         addreess_table = FirebaseDatabase.getInstance();
@@ -70,27 +65,31 @@ public class ShippingAddress extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                address = etAddress.getText().toString();
-                city = etCity.getText().toString();
-                region = etRegion.getText().toString();
+                add_area = etArea.getText().toString();
+                add_place = etPlace.getText().toString();
+                add_phone = etPhone.getText().toString();
+
+                //send the address to the common activity
+                Common.area = add_area;
+                Common.place = add_place;
 
                 //checking whether the edit text is empty
-                if (address.isEmpty()) {
-                    etAddress.setError("field can't be empty");
-                    etAddress.requestFocus();
-                } else if (city.isEmpty()) {
-                    etCity.setError("field can't be empty");
-                    etCity.requestFocus();
-                } else if (region.isEmpty()) {
-                    etRegion.setError("field can't be empty");
-                    etRegion.requestFocus();
+                if (add_area.isEmpty()) {
+                    etArea.setError("field can't be empty");
+                    etArea.requestFocus();
+                } else if (add_place.isEmpty()) {
+                    etPlace.setError("field can't be empty");
+                    etPlace.requestFocus();
+                } else if (add_phone.isEmpty()) {
+                    etPhone.setError("field can't be empty");
+                    etPhone.requestFocus();
                 } else {
                     if(ShippingAddress.this.getIntent().hasExtra(PICK_ADDRESS_DETAILS) &&
                             ShippingAddress.this.getIntent().getExtras().getBoolean(PICK_ADDRESS_DETAILS) ){
                         Intent intent = new Intent();
-                        intent.putExtra("customerAddress", address);
-                        intent.putExtra("customerCity", city);
-                        intent.putExtra("customerRegion", region);
+                        intent.putExtra("customerArea", add_area);
+                        intent.putExtra("customerPlace", add_place);
+                        intent.putExtra("customerPhone", add_phone);
                         ShippingAddress.this.setResult(RESULT_OK, intent);
                         ShippingAddress.this.finish();
                         return;

@@ -69,7 +69,7 @@ public class ListenOrder extends Service implements ChildEventListener {
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
                 .setTicker("Quick Duuka")
-                .setContentInfo("Details Concerning your Oder")
+                .setContentInfo("Your Order Details")
                 .setContentIntent(pendingIntent)
                 .setContentInfo("Info")
                 .setStyle(new NotificationCompat.BigTextStyle()

@@ -85,7 +85,7 @@ public class Util {
 
         //NumberFormat.getInstance().format(myNumber);
 
-        DecimalFormat formatter = new DecimalFormat("#,##0.00");
+        DecimalFormat formatter = new DecimalFormat("#,##0");
         //NumberFormat formatter =NumberFormat.getInstance();
         final String formattedNumber = formatter.format(number);//add commas
 

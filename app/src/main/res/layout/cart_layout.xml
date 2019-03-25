@@ -44,7 +44,7 @@
                     android:layout_marginLeft="16dp"
                     android:gravity="center_vertical|start"
                     android:textAllCaps="true"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     tools:text="Product 01" />
@@ -57,7 +57,7 @@
                     android:layout_marginLeft="16dp"
                     android:gravity="center_vertical|start"
                     android:textAllCaps="true"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="18sp"
                     tools:text="100,000" />
 

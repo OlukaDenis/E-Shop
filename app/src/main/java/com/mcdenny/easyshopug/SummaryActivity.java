@@ -93,7 +93,8 @@ public class SummaryActivity extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
-        progressDialog.setTitle("Placing Order");
+        progressDialog.setTitle("Wait");
+        progressDialog.setMessage("Placing order");
 
         //initialise firebase
         database = FirebaseDatabase.getInstance();

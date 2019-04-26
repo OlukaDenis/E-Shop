@@ -77,6 +77,8 @@ public class ProductList extends AppCompatActivity {
                 .build());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_list);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_ic);
         //customize font
         //changeToolbarFont(findViewById(R.id.app_bar_layout), this);
 

@@ -4,150 +4,138 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/good"
-    android:gravity="center"
+    android:background="@drawable/shop_bg"
     android:orientation="vertical"
     tools:context=".SignupActivity">
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="8dp"
-        app:cardElevation="20dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="10">
 
-        <ScrollView
+        <ImageView
+            android:id="@+id/img_back_to_login"
+            android:layout_width="30dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/back_ic"/>
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="2.5"
+            android:text="Sign Up"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="40sp"/>
 
-            <RelativeLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/layout1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="center"
-                android:paddingTop="0dp">
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/img"
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
-                    android:gravity="center|top">
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:hint="@string/phone_number"
+                    android:inputType="phone"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:textSize="18sp"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelTextSize="10dp"
+                    app:met_iconLeft="@drawable/phone_ic"
+                    app:met_iconPadding="0dp"
+                    app:met_maxCharacters="14"
+                    app:met_primaryColor="@color/colorPrimaryDark"
+                    app:met_singleLineEllipsis="true" />
 
-                    <ImageView
-                        android:id="@+id/logo"
-                        android:layout_width="200dp"
-                        android:layout_height="150dp"
-                        android:layout_marginBottom="10dp"
-                        android:padding="10dp"
-                        android:src="@drawable/easyshop" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layout1"
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/img"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="vertical">
-
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/phone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginRight="5dp"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:hint="@string/phone_number"
-                        android:inputType="phone"
-                        android:textColorHint="@android:color/darker_gray"
-                        android:textSize="18sp"
-                        app:met_floatingLabel="highlight"
-                        app:met_floatingLabelTextSize="10dp"
-                        app:met_iconLeft="@drawable/ic_phone"
-                        app:met_iconPadding="0dp"
-                        app:met_maxCharacters="10"
-                        app:met_primaryColor="@color/colorPrimaryDark"
-                        app:met_singleLineEllipsis="true" />
-
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginRight="5dp"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:hint="@string/name"
-                        android:inputType="textCapWords"
-                        android:textColorHint="@android:color/darker_gray"
-                        android:textSize="18sp"
-                        app:met_floatingLabel="highlight"
-                        app:met_floatingLabelTextSize="14sp"
-                        app:met_iconLeft="@drawable/ic_person"
-                        app:met_iconPadding="0dp"
-                        app:met_maxCharacters="50"
-                        app:met_primaryColor="@color/colorPrimaryDark"
-                        app:met_singleLineEllipsis="true" />
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:hint="@string/name"
+                    android:inputType="textCapWords"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:textSize="18sp"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelTextSize="14sp"
+                    app:met_iconLeft="@drawable/ic_person"
+                    app:met_iconPadding="0dp"
+                    app:met_maxCharacters="50"
+                    app:met_primaryColor="@color/colorPrimaryDark"
+                    app:met_singleLineEllipsis="true" />
 
 
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginRight="5dp"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:hint="@string/password"
-                        android:inputType="textPassword"
-                        android:textColorHint="@android:color/darker_gray"
-                        android:textSize="18sp"
-                        app:met_floatingLabel="highlight"
-                        app:met_floatingLabelTextSize="14sp"
-                        app:met_iconLeft="@drawable/ic_lock"
-                        app:met_iconPadding="0dp"
-                        app:met_maxCharacters="50"
-                        app:met_primaryColor="@color/colorPrimaryDark"
-                        app:met_singleLineEllipsis="true" />
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:textSize="18sp"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelTextSize="14sp"
+                    app:met_iconLeft="@drawable/lock_ic"
+                    app:met_iconPadding="0dp"
+                    app:met_maxCharacters="50"
+                    app:met_primaryColor="@color/colorPrimaryDark"
+                    app:met_singleLineEllipsis="true" />
 
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/email"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginRight="5dp"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:hint="@string/email"
-                        android:inputType="textEmailAddress"
-                        android:textColorHint="@android:color/darker_gray"
-                        android:textSize="18sp"
-                        app:met_floatingLabel="highlight"
-                        app:met_floatingLabelTextSize="14sp"
-                        app:met_iconLeft="@drawable/ic_mail"
-                        app:met_iconPadding="0dp"
-                        app:met_maxCharacters="50"
-                        app:met_primaryColor="@color/colorPrimaryDark"
-                        app:met_singleLineEllipsis="true"
-                        app:met_textColorHint="@color/grey_500" />
-                </LinearLayout>
-
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:textSize="18sp"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelTextSize="14sp"
+                    app:met_iconLeft="@drawable/ic_mail"
+                    app:met_iconPadding="0dp"
+                    app:met_maxCharacters="50"
+                    app:met_primaryColor="@color/colorPrimaryDark"
+                    app:met_singleLineEllipsis="true" />
                 <Button
                     android:id="@+id/signup"
                     android:layout_width="match_parent"
@@ -162,43 +150,45 @@
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center">
                 <TextView
                     android:id="@+id/already_have_account_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/signup"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="10dp"
-                    android:padding="5dp"
                     android:text="@string/already_have_account"
-                    android:textSize="15sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/Login_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/signup"
-                    android:layout_alignBaseline="@id/already_have_account_text"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_toEndOf="@id/already_have_account_text"
-                    android:layout_toRightOf="@id/already_have_account_text"
-                    android:padding="5dp"
                     android:text="@string/login"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp" />
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/terms"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/already_have_account_text"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:padding="5dp"
                     android:text="@string/agree_registration"
                     android:textSize="12sp" />
 
@@ -206,18 +196,17 @@
                     android:id="@+id/terms_of_service"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/already_have_account_text"
-                    android:layout_alignBaseline="@+id/terms"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_toEndOf="@id/terms"
-                    android:layout_toRightOf="@id/terms"
-                    android:gravity="center"
                     android:text="@string/terms"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
 
-            </RelativeLayout>
-        </ScrollView>
-    </android.support.v7.widget.CardView>
+
+
+
+
+
+
+    </LinearLayout>
 
 </LinearLayout>

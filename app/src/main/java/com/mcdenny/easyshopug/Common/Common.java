@@ -13,6 +13,11 @@ import java.util.List;
 public class Common {
     //This class saves the current user details
     public static User user_Current;
+
+    //current user logged in
+    public static String current_user_name, current_user_phone, current_user_email, current_user_password;
+   public static String clean_current_user_email;
+
     public static String USER_KEY = "User";
     public static String PASSWORD_KEY = "Password";
 
@@ -40,8 +45,10 @@ public class Common {
             NetworkInfo[] info = manager.getAllNetworkInfo();
             if (info != null) {
                 for (int i = 0; i < info.length; i++) {
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED) ;
-                    return true;
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+
                 }
             }
         }

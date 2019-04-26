@@ -2,149 +2,127 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/good"
-    android:gravity="center"
+    android:background="@drawable/shop_bg"
     android:orientation="vertical"
-    android:id="@+id/login_layout"
     tools:context=".LoginActivity">
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="8dp"
-        app:cardElevation="20dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="10">
 
-        <ScrollView
+        <TextView
             android:layout_width="match_parent"
-            android:background="@color/white"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:text="Login"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="40sp"/>
 
-            <RelativeLayout
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"
+            android:layout_marginTop="25dp"
+            android:orientation="vertical">
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/et_login_email"
                 android:layout_width="match_parent"
-                android:paddingTop="0dp"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:id="@+id/img"
-                    android:layout_width="match_parent"
-                    android:background="@color/colorPrimary"
-                    android:gravity="center|top"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="200dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_height="150dp"
-                        android:src="@drawable/easyshop" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@+id/img"
-                    android:layout_marginTop="25dp"
-                    android:orientation="vertical">
-
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/phone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:hint="@string/phone_number"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:inputType="phone"
-                        android:textColorHint="@android:color/darker_gray"
-                        android:textSize="18sp"
-                        app:met_clearButton="true"
-                        android:layout_marginTop="5dp"
-                        app:met_floatingLabel="highlight"
-                        app:met_floatingLabelTextSize="14dp"
-                        app:met_iconLeft="@drawable/ic_phone"
-                        app:met_iconPadding="0dp"
-                        app:met_maxCharacters="10"
-                        app:met_primaryColor="@color/colorPrimaryDark"
-                        app:met_singleLineEllipsis="true" />
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="18sp"
+                app:met_clearButton="true"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelTextSize="14dp"
+                app:met_iconLeft="@drawable/ic_mail"
+                app:met_iconPadding="0dp"
+                app:met_maxCharacters="50"
+                app:met_primaryColor="@color/colorPrimaryDark"
+                app:met_singleLineEllipsis="true" />
 
 
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:hint="@string/password"
-                        android:inputType="textPassword"
-                        android:textColorHint="@android:color/darker_gray"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:textSize="20sp"
-                        app:met_clearButton="true"
-                        app:met_floatingLabel="highlight"
-                        app:met_floatingLabelTextSize="14sp"
-                        app:met_iconLeft="@drawable/ic_lock"
-                        app:met_iconPadding="0dp"
-                        app:met_maxCharacters="20"
-                        app:met_primaryColor="@color/colorPrimaryDark"
-                        app:met_singleLineEllipsis="true" />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="20sp"
+                app:met_clearButton="true"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelTextSize="14sp"
+                app:met_iconLeft="@drawable/lock_ic"
+                app:met_iconPadding="0dp"
+                app:met_maxCharacters="20"
+                app:met_primaryColor="@color/colorPrimaryDark"
+                app:met_singleLineEllipsis="true" />
 
-                    <Button
-                        android:id="@+id/login"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@color/colorPrimary"
-                        android:text="@string/login"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
+            <TextView
+                android:id="@+id/forgot_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:padding="5dp"
+                android:text="@string/forgot"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/forgot_password"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:padding="5dp"
-                        android:text="@string/forgot"
-                        android:textStyle="italic"
-                        android:textColor="@color/black_shade"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/dont_have_account"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:padding="5dp"
-                        android:text="@string/dont_have_account"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="15sp" />
-                </LinearLayout>
+            <Button
+                android:id="@+id/login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/colorPrimary"
+                android:text="@string/login"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
 
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/dont_have_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:textStyle="bold"
+                android:text="@string/dont_have_account"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="15sp" />
+        </LinearLayout>
 
-        </ScrollView>
-
-    </android.support.v7.widget.CardView>
-
+    </LinearLayout>
 </LinearLayout>

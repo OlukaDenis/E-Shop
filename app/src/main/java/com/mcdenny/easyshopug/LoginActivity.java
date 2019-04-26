@@ -2,6 +2,7 @@ package com.mcdenny.easyshopug;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,14 +36,17 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LoginActivity extends AppCompatActivity {
-    EditText username, password;
+    EditText email, password;
     Button login;
     TextView create, forgot_password;
     LinearLayout login_layout;
     DatabaseReference user_table;
     FirebaseDatabase database;
     FirebaseAuth mAuth;
-    private String currentUserEmail;
+    FirebaseUser currentUser;
+    AlertDialog waitingDialog;
+    User user;
+
     private static final String TAG = SignupActivity.class.getSimpleName();
 
     @Override
@@ -59,17 +64,19 @@ public class LoginActivity extends AppCompatActivity {
                 .build());
         setContentView(R.layout.activity_login);
         //getting the reference
-        username = (MaterialEditText) findViewById(R.id.phone);
+        email = (MaterialEditText) findViewById(R.id.et_login_email);
         password = (MaterialEditText) findViewById(R.id.password);
         login = findViewById(R.id.login);
         create = findViewById(R.id.dont_have_account);
         forgot_password = findViewById(R.id.forgot_password);
         login_layout = findViewById(R.id.login_layout);
 
+        waitingDialog = new SpotsDialog(this);
+
         //initializing firebase database
-         database = FirebaseDatabase.getInstance();
-         user_table = database.getReference("User");
-         mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        user_table = database.getReference("User");
+        mAuth = FirebaseAuth.getInstance();
 
         create.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,93 +92,127 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         login.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               final AlertDialog waitingDialog = new SpotsDialog(LoginActivity.this);
-               //Check for network connection
-               if (Common.isNetworkAvailable(getBaseContext())){
-                   final String pass = password.getText().toString();
-                   final boolean valid_pass = Util.isValidPassword(pass);
-                   //Save user and password
-                   Paper.book().write(Common.USER_KEY, username.getText().toString());
-                   Paper.book().write(Common.PASSWORD_KEY, password.getText().toString());
-                   //checking whether the edit text is empty
-                   if(username.getText().toString().isEmpty()) {
-                       username.setError("You must fill in the phone number!");
-                       username.requestFocus();
-                   }
-                   else if (password.getText().toString().isEmpty()){
-                       password.setError("You must fill in the password!");
-                       password.requestFocus();
-                   }
-                   else if(!valid_pass){
-                       password.setError("Wrong password");
-                   }
-                   //If the textfields are not empty
-                   else {
-                       final String mPass = password.getText().toString();
-                       //setting a dialog to tell the user to wait
-                       waitingDialog.show();
-                       user_table.addListenerForSingleValueEvent(new ValueEventListener() {
-                           @Override
-                           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                               //Getting the user's email from the firebase database
-                                currentUserEmail = dataSnapshot.child(username.getText().toString()).child("email").getValue().toString();
-                               //checking if the user exists in the database
-                               if (dataSnapshot.child(username.getText().toString()).exists()) {
-                                   //getting the users information
-                                   User user = dataSnapshot.child(username.getText().toString()).getValue(User.class);
-                                   user.setPhone(username.getText().toString());
-                                   if (user.getPassword().equals(password.getText().toString())) {
-                                       Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                       Common.user_Current = user;//the user details are stored in user_current variable
-                                       startActivity(intent);
-                                       waitingDialog.dismiss();
+            @Override
+            public void onClick(View view) {
+                //Check for network connection
+                if (Common.isNetworkAvailable(getBaseContext())) {
+                    loginUser();
+                } else {
+                    final AlertDialog noNetworkDialog = new AlertDialog.Builder(LoginActivity.this)
+                            .setCancelable(false)
+                            .setTitle("Connection failed")
+                            .setMessage("Please check your internet connection")
+                            .setPositiveButton("TRY AGAIN", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    loginUser();
+                                }
+                            })
+                            .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                                       //signing the user to the firebase authentication
-                                       mAuth.signInWithEmailAndPassword(currentUserEmail, mPass)
-                                               .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                                   @Override
-                                                   public void onComplete(@NonNull Task<AuthResult> task) {
-                                                       if(task.isSuccessful()){
-                                                           Log.v(TAG, "Successfully logged in");
-                                                       }
-                                                       else {
-                                                           String message = task.getException().getMessage();
-                                                           Log.e(TAG, message);
-                                                       }
-                                                   }
-                                               });
+                                }
+                            })
+                            .create();
+                    noNetworkDialog.show();
+                    waitingDialog.dismiss();
+                    //SnackBar.make(login_layout, "Check your internet connection", SnackBar.LENGTH_SHORT).show();
+                    // Toast.makeText(LoginActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 
-                                       finish();//stops the login activity
-                                   } else {
-                                       Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
-                                       waitingDialog.dismiss();
-                                   }
-                               }
-                               //if user doesn't exist
-                               else {
-                                   Toast.makeText(LoginActivity.this, "User does not exist!", Toast.LENGTH_SHORT).show();
-                                   waitingDialog.dismiss();
-                               }
-                           }
+    private void loginUser() {
+        final String userEmail = email.getText().toString();
+        final String pass = password.getText().toString();
+        final boolean valid_pass = Util.isValidPassword(pass);
 
-                           @Override
-                           public void onCancelled(@NonNull DatabaseError databaseError) {
+        //Save user and password
+        //Paper.book().write(Common.USER_KEY, email);
+        //Paper.book().write(Common.PASSWORD_KEY, pass);
+        //checking whether the edit text is empty
+        if (userEmail.isEmpty()) {
+            email.setError("You must fill in the phone number!");
+            email.requestFocus();
+        } else if (pass.isEmpty()) {
+            password.setError("You must fill in the password!");
+            password.requestFocus();
+        } else if (!valid_pass) {
+            password.setError("Wrong password");
+        }
+        //If the textfields are not empty
+        else {
 
-                           }
-                       });
+            //save current user's details
+            final String cleanEmail = Util.cleanEmailKey(userEmail);
+            getCurrentUserDetails(cleanEmail);
 
-                   }//end of else if
-               }
-               else {
-                   //waitingDialog.dismiss();
-                   //SnackBar.make(login_layout, "Check your internet connection", SnackBar.LENGTH_SHORT).show();
-                   Toast.makeText(LoginActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
-                   return;
-               }
-           }
-       });
+            //setting a dialog to tell the user to wait
+            waitingDialog.show();
+            //signing the user to the firebase authentication
+            mAuth.signInWithEmailAndPassword(userEmail, pass)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                currentUser = mAuth.getCurrentUser();
+
+                                if (currentUser != null) {
+                                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                    // Common.user_Current = currentUser;//the user details are stored in user_current variable
+                                    startActivity(intent);
+                                    waitingDialog.dismiss();
+
+                                    finish();
+                                }
+                                Log.v(TAG, "Successfully logged in");
+                            } else {
+                                waitingDialog.dismiss();
+                                String message = task.getException().getMessage();
+                                Log.e(TAG, message);
+                                Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+
+        }//end of else if
+    }
+
+    private void getCurrentUserDetails(final String email) {
+
+        //save users info
+        user_table.child(email).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                 user = dataSnapshot.getValue(User.class);
+                 user = new User();
+                // Common.user_Current = user;
+                final String normalEmail = Util.normalEmailKey(email);
+                Common.clean_current_user_email = email;
+                //user.setEmail(normalEmail);
+
+                String phone = dataSnapshot.child("phone").getValue().toString();
+                String name = dataSnapshot.child("name").getValue().toString();
+                String pass = dataSnapshot.child("password").getValue().toString();
+
+                Common.current_user_email = normalEmail;
+                Common.current_user_name = name;
+                Common.current_user_phone = phone;
+
+                //Common.user_Current = user;
+                //Toast.makeText(LoginActivity.this, normalEmail, Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

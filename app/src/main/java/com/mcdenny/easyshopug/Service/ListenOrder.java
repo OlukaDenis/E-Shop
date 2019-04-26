@@ -68,13 +68,13 @@ public class ListenOrder extends Service implements ChildEventListener {
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
-                .setTicker("Quick Duuka")
+                .setTicker("E-Shop")
                 .setContentInfo("Your Order Details")
                 .setContentIntent(pendingIntent)
                 .setContentInfo("Info")
                 .setStyle(new NotificationCompat.BigTextStyle()
                 .bigText("Order No:" +key+ " has been "+ Common.convertCodeToStatus(request.getStatus())))
-                .setSmallIcon(R.mipmap.ic_launch_round);
+                .setSmallIcon(R.mipmap.ic_launcher_round);
 
         NotificationManager notificationManager = (NotificationManager)getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1,builder.build());

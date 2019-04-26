@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -44,6 +46,8 @@ public class HomeActivity extends AppCompatActivity
     DatabaseReference category;
     FirebaseStorage storage;
     StorageReference storageReference;
+    FirebaseAuth mAuth;
+    FirebaseUser currentUser;
 
     RecyclerView recyclerMenu;
 
@@ -55,6 +59,8 @@ public class HomeActivity extends AppCompatActivity
     FancyButton btnSelectImage, btnUploadImage;
     Category newCategory;
     Uri saveUri;
+    private String userName;
+
 
     private final int PICK_IMAGE_REQUEST = 71;
     public RecyclerView rView;
@@ -93,13 +99,17 @@ public class HomeActivity extends AppCompatActivity
         //showing the users full name on the header
         View headerView = navigationView.getHeaderView(0);
         usrFullName = headerView.findViewById(R.id.userFullName);
-        usrFullName.setText(Common.user_Current.getName());
+       usrFullName.setText(Common.current_user_name);
+       //Toast.makeText(this, Common.current_user_name, Toast.LENGTH_SHORT).show();
 
         //initialising the firebase database
         database = FirebaseDatabase.getInstance();
         category = database.getReference("Category");
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        userName = currentUser.getDisplayName();
 
         //Loading the product details to the menu
         recyclerMenu = findViewById(R.id.recycler_menu);
@@ -114,7 +124,6 @@ public class HomeActivity extends AppCompatActivity
         }
         else {
             Toast.makeText(HomeActivity.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
-            return;
         }
     }
 

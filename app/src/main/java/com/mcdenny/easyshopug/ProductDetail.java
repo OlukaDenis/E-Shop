@@ -48,6 +48,7 @@ public class ProductDetail extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference productDetail;
     DatabaseReference cartDetail;
+    String currentUserEmail;
 
     List<Product> prd_detail = new ArrayList<>();
     public static String mQty;
@@ -67,14 +68,17 @@ public class ProductDetail extends AppCompatActivity {
         setContentView(R.layout.activity_product_detail);
         Toolbar toolbar = findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
-       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_ic);
 
 
         //firebase init
         database = FirebaseDatabase.getInstance();
         productDetail = database.getReference("Products");
         cartDetail = database.getReference("Cart");
+
+        currentUserEmail = Util.cleanEmailKey(Common.current_user_email);
 
         //Getting the product list id from the product list activity
         if (getIntent() != null){
@@ -106,7 +110,7 @@ public class ProductDetail extends AppCompatActivity {
                 //New cart
                 //New cart
                 Cart cart = new Cart(
-                        Common.user_Current.getPhone(),
+                        currentUserEmail,
                         cNm,
                         cImg,
                         cDesc,
@@ -117,7 +121,7 @@ public class ProductDetail extends AppCompatActivity {
                 );
 
                 //sending the cart details to firebase
-                cartDetail.child(Common.user_Current.getPhone()).push().setValue(cart);
+                cartDetail.child(currentUserEmail).push().setValue(cart);
                 Snackbar.make(view, "Successfully added to the Cart", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }

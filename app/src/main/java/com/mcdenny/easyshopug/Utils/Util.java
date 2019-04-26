@@ -41,6 +41,12 @@ public class Util {
         return email.replace(".",",");
     }
 
+    public static String normalEmailKey(String email) {
+        if(TextUtils.isEmpty(email))
+            return null;
+        return email.replace(",",".");
+    }
+
     public static String formatRating(String rating) {
         if(TextUtils.isEmpty(rating))
             return null;

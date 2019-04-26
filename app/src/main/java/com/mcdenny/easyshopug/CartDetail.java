@@ -55,6 +55,7 @@ public class CartDetail extends AppCompatActivity {
     DatabaseReference cart;
     public String cartItemKey;
 
+    public String currentUserEmail;
     public String currentUserPhone;
     public String currentUserName;
 
@@ -113,13 +114,16 @@ public class CartDetail extends AppCompatActivity {
             }
         });
 
+        currentUserEmail = Util.cleanEmailKey(Common.current_user_email);
+        currentUserName = Common.current_user_name;
+        currentUserEmail = Common.current_user_phone;
+
         //initialise firebase
         database = FirebaseDatabase.getInstance();
         orders = database.getReference("Requests");
-        cart = database.getReference("Cart").child(Common.user_Current.getPhone());
+        cart = database.getReference("Cart").child(Common.clean_current_user_email);
 
-        currentUserPhone = Common.user_Current.getPhone();
-        currentUserName = Common.user_Current.getName();
+
 
         recyclerView = findViewById(R.id.cartList);
         recyclerView.setHasFixedSize(true);
@@ -131,9 +135,8 @@ public class CartDetail extends AppCompatActivity {
     }
 
     private void loadCartDetails() {
-        progressDialog.setTitle("Please wait");
-        progressDialog.setMessage("Loading cart....");
-        progressDialog.show();
+       waitingDialog.show();
+        //progressDialog.show();
         cartAdapter = new FirebaseRecyclerAdapter<Cart, CartDetailViewHolder>(
                 Cart.class,
                 R.layout.cart_layout,
@@ -141,9 +144,8 @@ public class CartDetail extends AppCompatActivity {
                 cart
         ) {
             @Override
-            protected void populateViewHolder(CartDetailViewHolder viewHolder, Cart model, int position) {
+            protected void populateViewHolder(CartDetailViewHolder viewHolder, Cart model, final int position) {
 
-                progressDialog.setCancelable(false);
                 list.add(model);
                 //sending the cart items to the common activity
                 Common.Current_cart_list = list;
@@ -164,17 +166,28 @@ public class CartDetail extends AppCompatActivity {
                 Common.cart_item_total = total; // send the total to the common activity
 
                 hideEmptyCart();
-                progressDialog.dismiss();
 
+                if(list.isEmpty()){
+                    waitingDialog.dismiss();
+                }
                 final String refKey = cartAdapter.getRef(position).getKey();
+                //final int mItemPrice = Integer.parseInt(cart.child(refKey).child("price").toString());
+                //final int mItemQty = Integer.parseInt(cart.child(refKey).child("quantity").toString());
+                //final int removeAmount = mItemPrice * mItemQty;
+                //total -= removeAmount;
                 viewHolder.remove_cart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         deleteCart(refKey);
-                        total += itemPrice * itemQty;
+                        loadCartDetails();
+                        totalPrice.setText(Cons.Vals.CURRENCY + Util.formatNumber(String.valueOf(total)));
+                        cartAdapter.notifyDataSetChanged();
+                        cartAdapter.notifyItemRemoved(position);
                     }
                 });
+                waitingDialog.dismiss();
             }
+
         };
 
         cartAdapter.notifyDataSetChanged();
@@ -185,9 +198,8 @@ public class CartDetail extends AppCompatActivity {
         progressDialog.setTitle("Please wait");
         progressDialog.setMessage("Deleting item....");
         progressDialog.show();
+
         cart.child(key).removeValue();
-        cartAdapter.notifyDataSetChanged();
-        loadCartDetails();
         progressDialog.dismiss();
     }
 

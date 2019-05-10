@@ -106,116 +106,7 @@ public class ProductList extends AppCompatActivity {
                 return;
             }
         }
-        
-        //search products
-        materialSearchBar = findViewById(R.id.searchBar);
-        materialSearchBar.setHint("Search Product");
-        
-        loadSuggest();
-        materialSearchBar.setLastSuggestions(suggestList);
-        materialSearchBar.setCardViewElevation(10);
-        materialSearchBar.addTextChangeListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                //when user searches something, we change suggestions
-                List<String> suggest = new ArrayList<String>();
-                for(String search:suggestList)
-                {
-                    if(search.toLowerCase().contains(materialSearchBar.getText().toLowerCase()))
-                        suggest.add(search);
-                }
-                materialSearchBar.setLastSuggestions(suggest);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-        materialSearchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
-            @Override
-            public void onSearchStateChanged(boolean enabled) {
-                //when search bar is closed, restore original suggest adapter
-                if(!enabled)
-                    recyclerView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onSearchConfirmed(CharSequence text) {
-                //when search is done, show results of search adapter
-                startSearch(text);
-            }
-
-            @Override
-            public void onButtonClicked(int buttonCode) {
-
-            }
-        });
-
-    }
-
-    private void startSearch(CharSequence text) {
-        searchAdapter = new FirebaseRecyclerAdapter<Product, ProductViewHolder>(
-                Product.class,
-                R.layout.product_list_layout,
-                ProductViewHolder.class,
-                productItemList.orderByChild("name").equalTo(text.toString())//compare the names
-        ) {
-            @Override
-            protected void populateViewHolder(ProductViewHolder viewHolder, final Product model, final int position) {
-                progressDialog.setTitle("Loading "+toolbarTitle);
-                progressDialog.show();
-                viewHolder.productItemName.setText(model.getName());
-                Picasso.with(getBaseContext()).load(model.getImage())
-                        .into(viewHolder.productItemImage);
-                //the name on the toolbar
-                Bundle bundle = getIntent().getExtras();
-                toolbarTitle = bundle.getString("Title_key");
-                setTitle(toolbarTitle);
-                progressDialog.dismiss();
-
-                final Product productItem = model;
-                viewHolder.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onClick(View view, int position, boolean isLongClicked) {
-                        Intent productDetail = new Intent(ProductList.this, ProductDetail.class);
-                        //Getting the category key id and sending it to the product list activity
-                        productDetail.putExtra("ProductListID", searchAdapter.getRef(position).getKey());
-                        startActivity(productDetail);
-                    }
-                });
-            }
-        };
-        recyclerView.setAdapter(searchAdapter);//set adapter for recycler view is search result
-    }
-
-    private void loadSuggest() {
-
-        productItemList.orderByChild("menuid").equalTo(categoryId);
-
-        productItemList.orderByChild("menuId").equalTo(categoryId)
-
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot postSnapshot:dataSnapshot.getChildren())
-                        {
-                            Product product = postSnapshot.getValue(Product.class);
-                            suggestList.add(product.getName());
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
     }
 
     private void loadProductItemList(String categoryId) {
@@ -253,6 +144,7 @@ public class ProductList extends AppCompatActivity {
                 });
 
                 //adding to favorite
+                /**
                 viewHolder.favoriteImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -311,11 +203,11 @@ public class ProductList extends AppCompatActivity {
                             public void onCancelled(@NonNull DatabaseError databaseError) {
 
                             }
-                        });*/
+                        });
 
 
                     }
-                });
+                });*/
             }
         };
 

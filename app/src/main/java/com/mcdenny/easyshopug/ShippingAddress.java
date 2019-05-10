@@ -54,7 +54,7 @@ public class ShippingAddress extends AppCompatActivity {
         etPlace = findViewById(R.id.address_place);
         etPhone = findViewById(R.id.address_phone);
         address_done = (Button) findViewById(R.id.btn_proceed);
-        etPhone.setText(Common.user_Current.getPhone());
+        etPhone.setText(Common.current_user_phone);
 
         //pointing to the root of database
         addreess_table = FirebaseDatabase.getInstance();

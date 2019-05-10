@@ -32,6 +32,7 @@ import com.mcdenny.easyshopug.Model.Category;
 import com.mcdenny.easyshopug.Service.ListenOrder;
 import com.mcdenny.easyshopug.ViewHolder.MenuViewHolder;
 import com.mcdenny.easyshopug.ViewHolder.RecyclerGrid;
+import com.mcdenny.easyshopug.chat.UsersActivity;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
 
@@ -84,7 +85,7 @@ public class HomeActivity extends AppCompatActivity
                 .build());
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar1);
-        toolbar.setTitle("Quick Duuka");
+        toolbar.setTitle("E-Shop");
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout1);
@@ -172,6 +173,9 @@ public class HomeActivity extends AppCompatActivity
             startActivity(new Intent(HomeActivity.this, OrderStatus.class));
         } else if (id == R.id.nav_settings) {
             startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+        }
+        else if (id == R.id.nav_chat) {
+            startActivity(new Intent(getApplicationContext(), UsersActivity.class));
         } else if (id == R.id.nav_about) {
             startActivity(new Intent(getApplicationContext(), AboutUs.class));
 
@@ -180,16 +184,16 @@ public class HomeActivity extends AppCompatActivity
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
 
-            String shareBodyText = "Quick Duuka :" +
+            String shareBodyText = "E-Shop :" +
                     "Check out on this application. you can download it from " +
                     "https://play.google.com/store/apps/details?id=com.mcdenny.easyshopug";
-            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Quick Duuka");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "E-Shop");
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText);
             startActivity(Intent.createChooser(sharingIntent, "Share via"));
 
         } else if (id == R.id.nav_logout) {
             //delete remember password
-            Paper.book().destroy();
+            //Paper.book().destroy();
 
             //firebaseAuth.signOut();
             intent = new Intent(HomeActivity.this, LoginActivity.class);

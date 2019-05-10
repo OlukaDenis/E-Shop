@@ -5,15 +5,17 @@ public class User {
     private String Password;
     private String Phone;
     private String Email;
+    private String Admin;
 
     public User (){
     }
 
 
-    public User(String name, String password, String phone) {
+    public User(String name, String password, String phone, String admin) {
         Name = name;
         Password = password;
         Phone = phone;
+        Admin = admin;
     }
 
     public String getName() {
@@ -46,5 +48,13 @@ public class User {
 
     public void setEmail(String email) {
         Email = email;
+    }
+
+    public String getAdmin() {
+        return Admin;
+    }
+
+    public void setAdmin(String admin) {
+        Admin = admin;
     }
 }

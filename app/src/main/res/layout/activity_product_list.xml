@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ProductList">
 
-        <com.mancj.materialsearchbar.MaterialSearchBar
+        <!--com.mancj.materialsearchbar.MaterialSearchBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/searchBar"
@@ -15,10 +15,9 @@
             android:layout_alignParentTop="true"
             app:mt_hint="Search Food"
             app:mt_speechMode="false"
-            />
+            /-->
 
         <android.support.v7.widget.RecyclerView
-            android:layout_below="@+id/searchBar"
             android:id="@+id/recycler_product"
             android:layout_marginTop="0dp"
             android:layout_width="match_parent"

@@ -150,6 +150,7 @@ public class SignupActivity extends AppCompatActivity {
         final String email = usremail.getText().toString();
         final String phone = usrphone.getText().toString().trim();
         final String  name = usrname.getText().toString().trim();
+        final String admin = "0";
 
         final boolean valid_pass = Util.isValidPassword(password);
         final boolean valid_email = Util.isValidEmail(email);
@@ -175,7 +176,7 @@ public class SignupActivity extends AppCompatActivity {
         else {
             waitingDialog.show();
 
-            user = new User(name, password, phone);
+            user = new User(name, password, phone, admin);
 
             profileUpdates = new UserProfileChangeRequest.Builder()
                     .setDisplayName(name)

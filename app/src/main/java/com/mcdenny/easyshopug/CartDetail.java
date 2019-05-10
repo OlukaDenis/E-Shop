@@ -116,7 +116,7 @@ public class CartDetail extends AppCompatActivity {
 
         currentUserEmail = Util.cleanEmailKey(Common.current_user_email);
         currentUserName = Common.current_user_name;
-        currentUserEmail = Common.current_user_phone;
+        currentUserPhone = Common.current_user_phone;
 
         //initialise firebase
         database = FirebaseDatabase.getInstance();

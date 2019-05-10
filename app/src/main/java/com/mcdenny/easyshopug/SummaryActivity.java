@@ -107,8 +107,8 @@ public class SummaryActivity extends AppCompatActivity {
 
         mCustomerArea = Common.area;
         mCustomerAddress = Common.place;
-        mCustomerName = Common.user_Current.getName();
-        mCustomerPhone = Common.user_Current.getPhone();
+        mCustomerName = Common.current_user_name;
+        mCustomerPhone = Util.cleanEmailKey(Common.current_user_email);
 
         mAddress.setText(mCustomerAddress);
         mArea.setText(mCustomerArea);
@@ -157,7 +157,7 @@ public class SummaryActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             progressDialog.dismiss();
-                            cart.child(Common.user_Current.getPhone()).removeValue();
+                            cart.child(mCustomerPhone).removeValue();
                             Intent intent = new Intent(SummaryActivity.this, CartDetail.class);
                             startActivity(intent);
                             Toast.makeText(SummaryActivity.this, "Successfully placed your order.", Toast.LENGTH_SHORT).show();

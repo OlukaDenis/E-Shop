@@ -4,7 +4,7 @@
     package="com.mcdenny.easyshopug">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -15,11 +15,22 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon">
-        <activity android:name=".PaymentMethodActivity"></activity>
+        <activity android:name=".chat.MessageActivity"
+            android:theme="@style/WithNoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".chat.UsersActivity" />
+        </activity>
+        <activity android:name=".chat.UsersActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
+        </activity>
+        <activity android:name=".PaymentMethodActivity" />
         <activity android:name=".DeliveryMethodActivity" />
         <activity
-            android:screenOrientation="userPortrait"
             android:name=".LoginActivity"
+            android:screenOrientation="userPortrait"
             android:theme="@style/WithNoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,8 +39,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:screenOrientation="userPortrait"
             android:name=".SignupActivity"
+            android:screenOrientation="userPortrait"
             android:theme="@style/WithNoActionBar" />
         <activity
             android:name=".ProductList"
@@ -70,9 +81,9 @@
                 android:value="com.mcdenny.easyshopug.HomeActivity" />
         </activity>
         <activity
-            android:screenOrientation="userPortrait"
             android:name=".ForgotPasswordActivity"
-            android:label="@string/reset_pass">
+            android:label="@string/reset_pass"
+            android:screenOrientation="userPortrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mcdenny.easyshopug.LoginActivity" />

@@ -1,6 +1,7 @@
 package com.mcdenny.easyshopug.chat;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ public class MessageActivity extends AppCompatActivity {
 
     ImageButton sendMessage;
     EditText textMessage;
+    ImageView callUser;
 
     FirebaseDatabase database;
     FirebaseUser firebaseUser;
@@ -71,6 +73,7 @@ public class MessageActivity extends AppCompatActivity {
 
         profile_pic = (ImageView) findViewById(R.id.img_profile);
         username = (TextView) findViewById(R.id.tv_message_username);
+        callUser = findViewById(R.id.img_call_user);
         sendMessage = (ImageButton) findViewById(R.id.btn_send) ;
         textMessage = (EditText) findViewById(R.id.text_send);
 
@@ -114,6 +117,15 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 username.setText(user.getName());
+                final String phonenumber = user.getPhone();
+                callUser.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent phoneIntent = new Intent(Intent.ACTION_DIAL);
+                        phoneIntent.setData(Uri.parse("tel:"+ phonenumber));
+                        startActivity(phoneIntent);
+                    }
+                });
 
                 //readMessage(firebaseUser.getUid(), userId);
                 readMessage(currUsr, userId);

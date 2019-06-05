@@ -12,9 +12,8 @@ import com.mcdenny.easyshopug.Interface.ItemClickListener;
 import com.mcdenny.easyshopug.R;
 
 public class CartDetailViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    public TextView cart_item_name, cart_item_price;
+    public TextView cart_item_name, cart_item_price, cart_number;
     public ImageView cart_item_image;
-    public ElegantNumberButton cart_number_button;
     public Button remove_cart;
     public ItemClickListener itemClickListener;
 
@@ -23,7 +22,7 @@ public class CartDetailViewHolder extends RecyclerView.ViewHolder implements Vie
         cart_item_name = (TextView) itemView.findViewById(R.id.cart_item_name);
         cart_item_price = (TextView) itemView.findViewById(R.id.cart_item_price);
         cart_item_image = (ImageView) itemView.findViewById(R.id.cart_image);
-        cart_number_button = (ElegantNumberButton) itemView.findViewById(R.id.enb_cart_add_subtract);
+        cart_number = (TextView) itemView.findViewById(R.id.cart_item_quantity);
         remove_cart = (Button) itemView.findViewById(R.id.remove_cart_item);
     }
 

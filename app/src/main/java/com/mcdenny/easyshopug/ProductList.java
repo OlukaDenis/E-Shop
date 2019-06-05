@@ -56,10 +56,10 @@ public class ProductList extends AppCompatActivity {
     FirebaseRecyclerAdapter<Product, ProductViewHolder> adapter;
 
     String categoryId = "";
-    String toolbarTitle ;
+    String toolbarTitle;
 
     //search functionality
-    FirebaseRecyclerAdapter<Product,ProductViewHolder> searchAdapter;
+    FirebaseRecyclerAdapter<Product, ProductViewHolder> searchAdapter;
     List<String> suggestList = new ArrayList<>();
     MaterialSearchBar materialSearchBar;
     private ProgressDialog progressDialog;
@@ -68,6 +68,7 @@ public class ProductList extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //set the fonts
@@ -94,14 +95,13 @@ public class ProductList extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
 
         //getting the intent from the home activity
-        if(getIntent() != null){
+        if (getIntent() != null) {
             categoryId = getIntent().getStringExtra("CategoryID");
         }
-        if(!categoryId.isEmpty() && categoryId != null) {
-            if (Common.isNetworkAvailable(getBaseContext())){
+        if (!categoryId.isEmpty() && categoryId != null) {
+            if (Common.isNetworkAvailable(getBaseContext())) {
                 loadProductItemList(categoryId);
-            }
-            else {
+            } else {
                 Toast.makeText(ProductList.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -115,13 +115,13 @@ public class ProductList extends AppCompatActivity {
                 R.layout.product_list_layout,
                 ProductViewHolder.class,
                 productItemList.orderByChild("menuid").equalTo(categoryId)//getting product items where menuID equals to category id
+
         ) {
             @Override
             protected void populateViewHolder(final ProductViewHolder viewHolder, final Product model, final int position) {
+                String available = model.getAvailable();
+                //  if (available.equals("1"))
                 viewHolder.productItemName.setText(model.getName());
-
-                Locale locale = new Locale("en", "UG");
-                NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
                 int thePrice = (Integer.parseInt(model.getPrice()));
                 viewHolder.productItemPrice.setText(Cons.Vals.CURRENCY + Util.formatNumber(String.valueOf(thePrice)));
                 Picasso.with(getBaseContext()).load(model.getImage())
@@ -142,77 +142,12 @@ public class ProductList extends AppCompatActivity {
                         startActivity(productDetail);
                     }
                 });
-
-                //adding to favorite
-                /**
-                viewHolder.favoriteImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final String itemKey = adapter.getRef(position).getKey();
-                        DatabaseReference favoriteRef = favoriteItem.child(Common.user_Current.getPhone()).child(itemKey);
-                        try{
-                            favoriteRef.runTransaction(new Transaction.Handler() {
-                                @NonNull
-                                @Override
-                                public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
-
-                                    Product product = mutableData.getValue(Product.class);
-                                    if (product == null) {
-                                        // favorite does not exist, create it
-                                        viewHolder.favoriteImage.setImageResource(R.drawable.ic_favorite_black_24dp);
-                                        mutableData.setValue(model);
-                                        Toast.makeText(ProductList.this, "Product added to favorites", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else {
-                                        // favorite exists, remove it
-                                        viewHolder.favoriteImage.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                                        mutableData.setValue(null);
-                                        Toast.makeText(ProductList.this, "Product removed from favorites", Toast.LENGTH_SHORT).show();
-                                    }
-                                    return Transaction.success(mutableData);
-                                }
-
-                                @Override
-                                public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
-                                    // Transaction completed
-                                    // Log.d(TAG, "toggleFavorite:onComplete:" + databaseError);
-                                }
-                            });
-                        } catch (Exception e) {
-                            Toast.makeText(ProductList.this , e.getMessage(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                        /*
-                        favoriteItem.child(Common.user_Current.getPhone()).child(itemKey).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.child(itemKey).equals(itemKey)){
-                                    viewHolder.favoriteImage.setImageResource(R.drawable.ic_favorite_black_24dp);
-                                    Toast.makeText(ProductList.this, itemKey + "Exists", Toast.LENGTH_SHORT).show();
-                                }
-                                else {
-                                    String me = dataSnapshot.getKey();
-                                    viewHolder.favoriteImage.setImageResource(R.drawable.ic_favorite_black_24dp);
-                                    favoriteItem.child(Common.user_Current.getPhone()).child(itemKey).setValue(model);
-                                    Toast.makeText(ProductList.this, me +"added to favorites", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-
-
-                    }
-                });*/
             }
         };
 
         //Setting the adapter
         recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -224,9 +159,6 @@ public class ProductList extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -241,7 +173,7 @@ public class ProductList extends AppCompatActivity {
             Intent cartIntent = new Intent(ProductList.this, CartDetail.class);
             startActivity(cartIntent);
         }
-        if (id == R.id.nav_settings){
+        if (id == R.id.nav_settings) {
             Intent settingIntent = new Intent(ProductList.this, SettingsActivity.class);
             startActivity(settingIntent);
         }
@@ -251,13 +183,13 @@ public class ProductList extends AppCompatActivity {
 
     //customize toolbar font
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public static void changeToolbarFont(Toolbar toolbar, Activity context){
-        for (int i = 0; i <toolbar.getChildCount(); i++){
+    public static void changeToolbarFont(Toolbar toolbar, Activity context) {
+        for (int i = 0; i < toolbar.getChildCount(); i++) {
             View view = toolbar.getChildAt(i);
-            if (view instanceof TextView){
+            if (view instanceof TextView) {
                 TextView tv = (TextView) view;
-                if(tv.getText().equals(toolbar.getTitle())){
-                   applyFont(tv, context);
+                if (tv.getText().equals(toolbar.getTitle())) {
+                    applyFont(tv, context);
                 }
             }
         }

@@ -1,6 +1,8 @@
 package com.mcdenny.easyshopug;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,12 +10,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mcdenny.easyshopug.Common.Common;
+import com.mcdenny.easyshopug.Interface.ItemClickListener;
 import com.mcdenny.easyshopug.Model.Requests;
+import com.mcdenny.easyshopug.Utils.Util;
 import com.mcdenny.easyshopug.ViewHolder.OrderViewHolder;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -53,7 +58,7 @@ public class OrderStatus extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         orderRecylerView.setLayoutManager(layoutManager);
 
-        loadOrderStatus(Common.user_Current.getPhone());
+        loadOrderStatus(Util.cleanEmailKey(Common.current_user_email));
 
     }
 
@@ -65,16 +70,54 @@ public class OrderStatus extends AppCompatActivity {
                 requests.orderByChild("contact").equalTo(phone)
         ) {
             @Override
-            protected void populateViewHolder(OrderViewHolder viewHolder, Requests model, int position) {
+            protected void populateViewHolder(OrderViewHolder viewHolder, final Requests model, final int position) {
                 viewHolder.txtOrderId.setText(adapter.getRef(position).getKey());
                 viewHolder.txtOrderPhone.setText(model.getContact());
                 viewHolder.txtOrderAddress.setText(model.getAddress());
                 viewHolder.txtOrderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
+                viewHolder.txtOrderReceived.setText(Common.convertCodeToReceived(model.getRecieved()));
+                String transporter = model.getTransporter();
+                if(transporter.equals("0")){
+                    viewHolder.txtOrderTransporter.setText("Transporter not assigned");
+                }else {
+                    viewHolder.txtOrderTransporter.setText(model.getTransporter());
+                }
+
+                viewHolder.editOrder.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        editOrder(adapter.getRef(position).getKey(), model);
+                    }
+                });
+
+                viewHolder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClicked) {
+
+                    }
+                });
             }
         };
         orderRecylerView.setAdapter(adapter);
     }
 
+    private void editOrder(final String key, final Requests model) {
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(OrderStatus.this);
+        alertDialog.setTitle("Have you received the order?");
+        alertDialog.setMessage("Dear customer, please click YES upon receiving your order. Thank you");
+
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                model.setRecieved("Order received successfully");
+
+                requests.child(key).setValue(model); //add to update size
+                adapter.notifyDataSetChanged();
+            }
+        });
+        alertDialog.show();
+    }
 
 
     @Override

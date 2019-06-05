@@ -36,8 +36,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ProductDetail extends AppCompatActivity {
-    TextView prdName, prdDescription, prdPrice, prdDiscount;
+    TextView prdName, prdDescription, prdPrice, prdOwner;
     ImageView prdImage;
+    ImageView burgain;
     CollapsingToolbarLayout detailCollapsingToolbar;
     ElegantNumberButton numberButton;
 
@@ -57,6 +58,7 @@ public class ProductDetail extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +70,7 @@ public class ProductDetail extends AppCompatActivity {
         setContentView(R.layout.activity_product_detail);
         Toolbar toolbar = findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
-       getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_ic);
 
@@ -81,14 +83,13 @@ public class ProductDetail extends AppCompatActivity {
         currentUserEmail = Util.cleanEmailKey(Common.current_user_email);
 
         //Getting the product list id from the product list activity
-        if (getIntent() != null){
+        if (getIntent() != null) {
             productID = getIntent().getStringExtra("ProductListID");
         }
-        if(!productID.isEmpty() ){
-            if (Common.isNetworkAvailable(getBaseContext())){
+        if (!productID.isEmpty()) {
+            if (Common.isNetworkAvailable(getBaseContext())) {
                 getProductDetail(productID);
-            }
-            else {
+            } else {
                 Toast.makeText(ProductDetail.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -98,10 +99,11 @@ public class ProductDetail extends AppCompatActivity {
         prdName = findViewById(R.id.product_detail_name);
         prdDescription = findViewById(R.id.product_description);
         prdPrice = findViewById(R.id.product_detail_price);
-        prdDiscount = findViewById(R.id.product_detail_discount);
         prdImage = findViewById(R.id.product_detail_image);
         addToCart = findViewById(R.id.add_to_cart);
         numberButton = findViewById(R.id.add_subtract_button);
+        prdOwner = findViewById(R.id.prd_added_by);
+        //burgain = findViewById(R.id.img_bargain);
 
         addToCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,10 +117,34 @@ public class ProductDetail extends AppCompatActivity {
                         cImg,
                         cDesc,
                         mQty,
-                        cDisc,
                         numberButton.getNumber()
 
                 );
+
+                productDetail.child(productID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Product product = dataSnapshot.getValue(Product.class);
+
+                        final Product updateProduct = new Product();
+                        updateProduct.setAvailable("0");
+                        updateProduct.setAddedBy(product.getAddedBy());
+                        updateProduct.setBargained(product.getBargained());
+                        updateProduct.setDescription(product.getDescription());
+                        updateProduct.setImage(product.getImage());
+                        updateProduct.setPrice(product.getPrice());
+                        updateProduct.setName(product.getName());
+                        updateProduct.setMenuid(product.getMenuid());
+
+                        //productDetail.child(productID).setValue(updateProduct);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
 
                 //sending the cart details to firebase
                 cartDetail.child(currentUserEmail).push().setValue(cart);
@@ -148,23 +174,21 @@ public class ProductDetail extends AppCompatActivity {
 
                 detailCollapsingToolbar.setTitle(finalProduct.getName());//collapsing toolbar title
                 prdName.setText(finalProduct.getName());
-                prdDescription.setText("Description: \n"+finalProduct.getDescription());
+                prdDescription.setText("Description: \n" + finalProduct.getDescription());
 
                 //Locale locale = new Locale("en", "UG");
                 //NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
                 int thePrice = (Integer.parseInt(finalProduct.getPrice()));
                 prdPrice.setText(Cons.Vals.CURRENCY + Util.formatNumber(String.valueOf(thePrice)));
                 mQty = finalProduct.getPrice();
+                prdOwner.setText(finalProduct.getAddedBy());
 
                 //to be sent to the cart
                 cNm = finalProduct.getName();
                 cImg = finalProduct.getImage();
-                cDesc = "Description: \n"+finalProduct.getDescription();
+                cDesc = "Description: \n" + finalProduct.getDescription();
                 //cPrice = numberFormat.format(thePrice);
                 cPrice = String.valueOf(thePrice);
-                cDisc = "Discount: "+finalProduct.getDiscount()+"%";
-
-                prdDiscount.setText("Discount: "+finalProduct.getDiscount()+"%");
             }
 
             @Override
@@ -200,7 +224,7 @@ public class ProductDetail extends AppCompatActivity {
             Intent cartIntent = new Intent(ProductDetail.this, CartDetail.class);
             startActivity(cartIntent);
         }
-        if (id == R.id.nav_settings){
+        if (id == R.id.nav_settings) {
             Intent settingIntent = new Intent(ProductDetail.this, SettingsActivity.class);
             startActivity(settingIntent);
         }

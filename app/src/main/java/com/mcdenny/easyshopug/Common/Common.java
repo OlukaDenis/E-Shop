@@ -58,13 +58,23 @@ public class Common {
 
     public static String convertCodeToStatus(String status) {
         if(status.equals("0")){
-            return "Placed";
+            return "order being processed";
         }
         else if(status.equals("1")){
-            return "Currently Being Shipped";
+            return "Order being transported";
         }
         else {
-            return "Shipped";
+            return "Order delivered";
+        }
+    }
+
+
+    public static String convertCodeToReceived(String received) {
+        if(received.equals("0")){
+            return "Order not received";
+        }
+        else {
+            return "Order received successfully";
         }
     }
 }

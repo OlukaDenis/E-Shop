@@ -6,20 +6,22 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Cart implements Serializable {
-    private String Phone, Name, Image, Description, Price, Discount, quantity;
-
-    public String toString() {
-        return "Phone: " + Phone +
-                "\nName: " + Name +
-                "\nImage: " + Image +
-                "\nDescription: " + Description +
-                "\nPrice: " + Price +
-                "\nDiscount: " + Discount +
-                "\nQuantity: " + quantity;
-    }
+    private String Phone, Name, Image, Description, Price, quantity;
 
     public Cart(){
     }
+
+
+    public Cart(String phone, String name, String image, String description, String price,  String quantity) {
+
+        Phone = phone;
+        Name = name;
+        Image = image;
+        Description = description;
+        Price = price;
+        this.quantity = quantity;
+    }
+
 
     public String getPhone() {
         return Phone;
@@ -27,17 +29,6 @@ public class Cart implements Serializable {
 
     public void setPhone(String phone) {
         Phone = phone;
-    }
-
-    public Cart(String phone, String name, String image, String description, String price, String discount, String quantity) {
-
-        Phone = phone;
-        Name = name;
-        Image = image;
-        Description = description;
-        Price = price;
-        Discount = discount;
-        this.quantity = quantity;
     }
 
     public String getName() {
@@ -72,13 +63,6 @@ public class Cart implements Serializable {
         Price = price;
     }
 
-    public String getDiscount() {
-        return Discount;
-    }
-
-    public void setDiscount(String discount) {
-        Discount = discount;
-    }
 
     public String getQuantity() {
         return quantity;

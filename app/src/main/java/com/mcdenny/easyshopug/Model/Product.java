@@ -3,64 +3,82 @@ package com.mcdenny.easyshopug.Model;
 import java.io.Serializable;
 
 public class Product implements Serializable {
-    private String Name, Image, Description, Price, Discount, menuid;
+    private String name, image, description, price, addedBy, bargained, available, menuid;
     public Product() {
     }
 
-    public Product(String name, String image, String description, String price, String discount, String menuID) {
-        Name = name;
-        Image = image;
-        Description = description;
-        Price = price;
-        Discount = discount;
-        menuid = menuID;
+    public Product(String name, String image, String description, String price, String addedBy, String bargained, String available, String menuid) {
+        this.name = name;
+        this.image = image;
+        this.description = description;
+        this.price = price;
+        this.addedBy = addedBy;
+        this.bargained = bargained;
+        this.available = available;
+        this.menuid = menuid;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getImage() {
-        return Image;
+        return image;
     }
 
     public void setImage(String image) {
-        Image = image;
+        this.image = image;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public String getPrice() {
-        return Price;
+        return price;
     }
 
     public void setPrice(String price) {
-        Price = price;
+        this.price = price;
     }
 
-    public String getDiscount() {
-        return Discount;
+    public String getAddedBy() {
+        return addedBy;
     }
 
-    public void setDiscount(String discount) {
-        Discount = discount;
+    public void setAddedBy(String addedBy) {
+        this.addedBy = addedBy;
     }
 
-    public String getMenuID() {
+    public String getBargained() {
+        return bargained;
+    }
+
+    public void setBargained(String bargained) {
+        this.bargained = bargained;
+    }
+
+    public String getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(String available) {
+        this.available = available;
+    }
+
+    public String getMenuid() {
         return menuid;
     }
 
-    public void setMenuID(String menuID) {
-        menuid = menuID;
+    public void setMenuid(String menuid) {
+        this.menuid = menuid;
     }
 }

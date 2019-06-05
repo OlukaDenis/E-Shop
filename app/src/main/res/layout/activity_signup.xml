@@ -49,7 +49,7 @@
                 android:orientation="vertical">
 
                 <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/phone"
+                    android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -58,15 +58,15 @@
                     android:layout_marginRight="5dp"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:hint="@string/phone_number"
-                    android:inputType="phone"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
                     android:textColorHint="@android:color/darker_gray"
                     android:textSize="18sp"
                     app:met_floatingLabel="highlight"
-                    app:met_floatingLabelTextSize="10dp"
-                    app:met_iconLeft="@drawable/phone_ic"
+                    app:met_floatingLabelTextSize="14sp"
+                    app:met_iconLeft="@drawable/ic_mail"
                     app:met_iconPadding="0dp"
-                    app:met_maxCharacters="14"
+                    app:met_maxCharacters="50"
                     app:met_primaryColor="@color/colorPrimaryDark"
                     app:met_singleLineEllipsis="true" />
 
@@ -92,6 +92,27 @@
                     app:met_primaryColor="@color/colorPrimaryDark"
                     app:met_singleLineEllipsis="true" />
 
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:hint="@string/phone_number"
+                    android:inputType="phone"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:textSize="18sp"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelTextSize="10dp"
+                    app:met_iconLeft="@drawable/phone_ic"
+                    app:met_iconPadding="0dp"
+                    app:met_maxCharacters="14"
+                    app:met_primaryColor="@color/colorPrimaryDark"
+                    app:met_singleLineEllipsis="true" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/password"
@@ -115,27 +136,7 @@
                     app:met_primaryColor="@color/colorPrimaryDark"
                     app:met_singleLineEllipsis="true" />
 
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:hint="@string/email"
-                    android:inputType="textEmailAddress"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:textSize="18sp"
-                    app:met_floatingLabel="highlight"
-                    app:met_floatingLabelTextSize="14sp"
-                    app:met_iconLeft="@drawable/ic_mail"
-                    app:met_iconPadding="0dp"
-                    app:met_maxCharacters="50"
-                    app:met_primaryColor="@color/colorPrimaryDark"
-                    app:met_singleLineEllipsis="true" />
+
                 <Button
                     android:id="@+id/signup"
                     android:layout_width="match_parent"

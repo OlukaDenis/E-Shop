@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,8 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mcdenny.easyshopug.Common.Common;
 import com.mcdenny.easyshopug.Model.Cart;
 import com.mcdenny.easyshopug.Utils.Cons;
@@ -44,6 +48,7 @@ public class CartDetail extends AppCompatActivity {
     LinearLayout checkoutLayout;
     Button placeOrder;
     public int total = 0;//cart total
+    public int updatedTotal = 0;
     List<Cart> list = new ArrayList<>();
     HashMap<String, List<Cart>> cartItemMap;
 
@@ -75,6 +80,8 @@ public class CartDetail extends AppCompatActivity {
     public android.app.AlertDialog waitingDialog;
 
     FirebaseRecyclerAdapter<Cart, CartDetailViewHolder> cartAdapter;
+
+    Cart updatedCart = new Cart();
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -121,7 +128,7 @@ public class CartDetail extends AppCompatActivity {
         //initialise firebase
         database = FirebaseDatabase.getInstance();
         orders = database.getReference("Requests");
-        cart = database.getReference("Cart").child(Common.clean_current_user_email);
+        cart = database.getReference("Cart").child(currentUserEmail);
 
 
 
@@ -135,8 +142,10 @@ public class CartDetail extends AppCompatActivity {
     }
 
     private void loadCartDetails() {
-       waitingDialog.show();
-        //progressDialog.show();
+       //waitingDialog.show();
+       //progressDialog.setMessage("Loading cart items...");
+       //progressDialog.setTitle("Wait");
+       // progressDialog.show();
         cartAdapter = new FirebaseRecyclerAdapter<Cart, CartDetailViewHolder>(
                 Cart.class,
                 R.layout.cart_layout,
@@ -144,7 +153,7 @@ public class CartDetail extends AppCompatActivity {
                 cart
         ) {
             @Override
-            protected void populateViewHolder(CartDetailViewHolder viewHolder, Cart model, final int position) {
+            protected void populateViewHolder(CartDetailViewHolder viewHolder, final Cart model, final int position) {
 
                 list.add(model);
                 //sending the cart items to the common activity
@@ -154,7 +163,7 @@ public class CartDetail extends AppCompatActivity {
                 final String qty = model.getQuantity();
                 viewHolder.cart_item_name.setText(model.getName());
                 viewHolder.cart_item_price.setText(Cons.Vals.CURRENCY + Util.formatNumber(price));
-                viewHolder.cart_number_button.setNumber(qty);
+                viewHolder.cart_number.setText(qty);
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(viewHolder.cart_item_image);
 
@@ -168,24 +177,22 @@ public class CartDetail extends AppCompatActivity {
                 hideEmptyCart();
 
                 if(list.isEmpty()){
-                    waitingDialog.dismiss();
+                    //waitingDialog.dismiss();
+                    //progressDialog.dismiss();
                 }
-                final String refKey = cartAdapter.getRef(position).getKey();
-                //final int mItemPrice = Integer.parseInt(cart.child(refKey).child("price").toString());
-                //final int mItemQty = Integer.parseInt(cart.child(refKey).child("quantity").toString());
-                //final int removeAmount = mItemPrice * mItemQty;
-                //total -= removeAmount;
+
+                if (cartAdapter.getItemCount() == 0){
+                    //progressDialog.dismiss();
+                }
+
+
                 viewHolder.remove_cart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deleteCart(refKey);
-                        loadCartDetails();
-                        totalPrice.setText(Cons.Vals.CURRENCY + Util.formatNumber(String.valueOf(total)));
-                        cartAdapter.notifyDataSetChanged();
-                        cartAdapter.notifyItemRemoved(position);
+                        deleteCart(cartAdapter.getRef(position).getKey());
+
                     }
                 });
-                waitingDialog.dismiss();
             }
 
         };
@@ -194,14 +201,53 @@ public class CartDetail extends AppCompatActivity {
         recyclerView.setAdapter(cartAdapter);
     }
 
-    private  void deleteCart(String key){
+    private void deleteCart(String key) {
         progressDialog.setTitle("Please wait");
         progressDialog.setMessage("Deleting item....");
         progressDialog.show();
-
         cart.child(key).removeValue();
+        //to update the total after deleting item
+
+        cartAdapter = new FirebaseRecyclerAdapter<Cart, CartDetailViewHolder>(
+                Cart.class,
+                R.layout.cart_layout,
+                CartDetailViewHolder.class,
+                cart
+        ) {
+            @Override
+            protected void populateViewHolder(CartDetailViewHolder viewHolder, final Cart model, final int position) {
+
+                list.add(model);
+                //sending the cart items to the common activity
+                Common.Current_cart_list = list;
+
+                final String price = model.getPrice();
+                final String qty = model.getQuantity();
+
+                viewHolder.cart_item_name.setText(model.getName());
+                viewHolder.cart_item_price.setText(Cons.Vals.CURRENCY + Util.formatNumber(price));
+                viewHolder.cart_number.setText(qty);
+                Picasso.with(getBaseContext()).load(model.getImage())
+                        .into(viewHolder.cart_item_image);
+
+                final int itemPrice = Integer.parseInt(price);
+                final int itemQty = Integer.parseInt(qty);
+
+                updatedTotal += itemPrice * itemQty;
+                totalPrice.setText(Cons.Vals.CURRENCY + Util.formatNumber(String.valueOf(updatedTotal)));
+                Common.cart_item_total = updatedTotal; // send the total to the common activity
+
+            }
+
+        };
+
+        cartAdapter.notifyDataSetChanged();
+        recyclerView.setAdapter(cartAdapter);
+
         progressDialog.dismiss();
     }
+
+
 
     private void pickAddress() {
 

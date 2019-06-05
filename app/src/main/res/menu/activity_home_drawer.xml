@@ -11,7 +11,7 @@
 
         <item
             android:id="@+id/order_history"
-            android:icon="@drawable/shopping_history_ic"
+            android:icon="@drawable/ic_order_history"
             android:title="@string/order_history" />
 
         <item

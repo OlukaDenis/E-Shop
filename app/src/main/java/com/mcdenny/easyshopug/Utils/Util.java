@@ -121,7 +121,14 @@ public class Util {
      * returns true when the passwor is long
      */
     public static boolean isValidPassword(String pass){
-        if(pass!=null && pass.length()>6){
+        if(pass!=null && pass.length()>=6){
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isValidName(String name){
+        if(name.matches("^[A-Za-z]+$")) {
             return true;
         }
         return false;

@@ -152,26 +152,35 @@ public class SignupActivity extends AppCompatActivity {
         final String  name = usrname.getText().toString().trim();
         final String admin = "0";
 
+
         final boolean valid_pass = Util.isValidPassword(password);
         final boolean valid_email = Util.isValidEmail(email);
+        final boolean valid_name = Util.isValidName(name);
+
+        //empty field validations
         if (usrphone.getText().toString().isEmpty()) {
-            usrphone.setError("Invalid Phone number");
+            usrphone.setError("Phone number field must not be empty");
             usrphone.requestFocus();
         } else if (usrname.getText().toString().isEmpty()) {
-            usrname.setError("Invalid Name");
+            usrname.setError("Name field must not be empty");
             usrname.requestFocus();
         } else if (usrpassword.getText().toString().isEmpty()) {
-            usrpassword.setError("Please enter password");
+            usrpassword.setError("Password field must not be empty");
             usrpassword.requestFocus();
         } else if (usremail.getText().toString().isEmpty()) {
-            usremail.setError("Invalid email");
+            usremail.setError("Email field must not be empty");
             usremail.requestFocus();
         }
+
+        //typical validations
         else if (!valid_pass) {
-            usrpassword.setError("Invalid email format");
+            usrpassword.setError("Password must be at least six characters");
         }
         else if (!valid_email) {
             usremail.setError("Invalid email format");
+        }
+        else if(!valid_name){
+            usrname.setError("Name must not contain symbols or numbers");
         }
         else {
             waitingDialog.show();

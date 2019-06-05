@@ -128,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
         final String userEmail = email.getText().toString();
         final String pass = password.getText().toString();
         final boolean valid_pass = Util.isValidPassword(pass);
+        final boolean valid_email = Util.isValidEmail(userEmail);
 
         //Save user and password
         //Paper.book().write(Common.USER_KEY, email);
@@ -139,8 +140,14 @@ public class LoginActivity extends AppCompatActivity {
         } else if (pass.isEmpty()) {
             password.setError("You must fill in the password!");
             password.requestFocus();
-        } else if (!valid_pass) {
-            password.setError("Wrong password");
+        }
+
+        //typical validations
+        else if (!valid_pass) {
+            password.setError("Short password");
+        }
+        else if (!valid_email) {
+            email.setError("Invalid email format");
         }
         //If the textfields are not empty
         else {

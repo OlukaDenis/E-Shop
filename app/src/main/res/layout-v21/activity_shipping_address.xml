@@ -15,8 +15,8 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:layout_weight="9">
 
 
@@ -32,6 +32,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:hint="Area"
+            android:drawableEnd="@drawable/ic_down_arrow"
             android:inputType="textCapWords"
             android:textSize="20sp"
             app:met_floatingLabel="highlight"
@@ -40,6 +41,8 @@
             app:met_primaryColor="@color/colorPrimary"
             app:met_singleLineEllipsis="true"
             app:met_textColorHint="@android:color/darker_gray" />
+
+
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/address_place"
@@ -55,12 +58,14 @@
             android:hint="Place of residence"
             android:inputType="textCapWords"
             android:textSize="20sp"
+            android:drawableEnd="@drawable/ic_down_arrow"
             app:met_floatingLabel="highlight"
             app:met_floatingLabelTextSize="14dp"
             app:met_iconPadding="0dp"
             app:met_primaryColor="@color/colorPrimary"
             app:met_singleLineEllipsis="true"
             app:met_textColorHint="@android:color/darker_gray" />
+
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/address_phone"

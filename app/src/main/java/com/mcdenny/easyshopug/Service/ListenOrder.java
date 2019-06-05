@@ -54,6 +54,7 @@ public class ListenOrder extends Service implements ChildEventListener {
     @Override
     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
         Requests request = dataSnapshot.getValue(Requests.class);
+        assert request != null;
         showNotification(dataSnapshot.getKey(), request);
     }
 
@@ -73,7 +74,7 @@ public class ListenOrder extends Service implements ChildEventListener {
                 .setContentIntent(pendingIntent)
                 .setContentInfo("Info")
                 .setStyle(new NotificationCompat.BigTextStyle()
-                .bigText("Order No:" +key+ " has been "+ Common.convertCodeToStatus(request.getStatus())))
+                .bigText("Order No:" +key+ Common.convertCodeToStatus(request.getStatus())))
                 .setSmallIcon(R.mipmap.ic_launcher_round);
 
         NotificationManager notificationManager = (NotificationManager)getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);

@@ -8,21 +8,22 @@ public class Requests {
     private String contact;
     private String address;
     private int total;
-    private String status, transporter, IsReceived;
+    private String status, transporter, recieved, cancelled;
     private List<Cart> orders;//List of orders
 
     public Requests(){
 
     }
 
-    public Requests(String name, String contact, String address, int total,  List<Cart> orders) {
+    public Requests(String name, String contact, String address, int total, List<Cart> orders) {
         this.name = name;
         this.contact = contact;
         this.address = address;
         this.total = total;
         this.status = "0";//default is 0 , 1: shipping, 2:shipped
         this.transporter = "0";
-        this.IsReceived = "0";
+        this.recieved = "0";
+        this.cancelled = "0";
         this.orders = orders;
     }
 
@@ -74,12 +75,20 @@ public class Requests {
         this.transporter = transporter;
     }
 
-    public String getIsReceived() {
-        return IsReceived;
+    public String getRecieved() {
+        return recieved;
     }
 
-    public void setIsReceived(String isReceived) {
-        IsReceived = isReceived;
+    public void setRecieved(String recieved) {
+        this.recieved = recieved;
+    }
+
+    public String getCancelled() {
+        return cancelled;
+    }
+
+    public void setCancelled(String cancelled) {
+        this.cancelled = cancelled;
     }
 
     public List<Cart> getOrders() {
